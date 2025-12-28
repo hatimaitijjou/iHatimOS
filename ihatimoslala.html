@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iHatimOS | لوحة التحكم الذكية</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff4757;
+            --sidebar-bg: #121214;
+            --main-bg: #ffffff;
+            --faded: rgba(0, 0, 0, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: var(--sidebar-bg); height: 100vh; display: flex; overflow: hidden; }
+
+        /* شاشة الدخول */
+        #login-screen {
+            position: fixed; inset: 0; background: radial-gradient(circle, #1e1e2f, #0f0c29);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
+        }
+        .login-box {
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 25px; text-align: center; width: 350px;
+            border: 1px solid rgba(255,255,255,0.1); color: white;
+        }
+        .login-box h1 span { color: var(--primary); }
+        .login-box input {
+            width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none;
+            background: rgba(255,255,255,0.1); color: white; text-align: center; outline: none;
+        }
+        .login-box button {
+            width: 100%; padding: 12px; border-radius: 10px; border: none;
+            background: var(--primary); color: white; font-weight: bold; cursor: pointer;
+        }
+
+        /* الواجهة الرئيسية */
+        #main-app { display: none; width: 100%; height: 100vh; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); padding: 40px 20px; display: flex; flex-direction: column; }
+        .nav-btn {
+            padding: 15px; border-radius: 12px; margin-bottom: 8px; cursor: pointer;
+            display: flex; align-items: center; gap: 12px; color: #777; transition: 0.3s;
+        }
+        .nav-btn.active, .nav-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-btn.active { border-right: 4px solid var(--primary); }
+
+        .workspace { flex: 1; background: var(--main-bg); margin: 15px; border-radius: 35px; padding: 50px; overflow-y: auto; position: relative; }
+        .clock { position: absolute; top: 25px; left: 45px; color: #ccc; font-weight: bold; }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        h1 { font-size: 3.5rem; margin-bottom: 20px; outline: none; color: #111; }
+        .editor { font-size: 1.2rem; line-height: 1.7; outline: none; min-height: 450px; position: relative; color: #333; }
+        
+        /* النص الخافت */
+        .editor:empty:before { content: "اكتب / للأوامر..."; color: var(--faded); font-style: italic; pointer-events: none; }
+
+        /* قائمة السلاش */
+        #slash-menu {
+            position: absolute; background: white; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none;
+            width: 200px; border: 1px solid #eee; z-index: 1000; overflow: hidden;
+        }
+        .menu-item { padding: 12px 15px; cursor: pointer; color: #444; display: flex; align-items: center; gap: 10px; }
+        .menu-item:hover { background: #f8f8f8; color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>iHatim<span>OS</span></h1>
+            <input type="text" id="user-in" placeholder="اسم المستخدم">
+            <button onclick="start()">دخول</button>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <aside class="sidebar">
+            <div style="color:white; font-size:1.5rem; font-weight:bold; margin-bottom:40px;">iHatim<span>OS</span></div>
+            <div class="nav-btn active" onclick="tab('n', this)"><i class="fas fa-pen"></i> الملاحظات</div>
+            <div class="nav-btn" onclick="tab('p', this)"><i class="fas fa-code"></i> المشاريع</div>
+            <div class="nav-btn" onclick="tab('t', this)"><i class="fas fa-check"></i> المهام</div>
+        </aside>
+
+        <main class="workspace">
+            <div class="clock" id="clk">00:00:00</div>
+            <div id="n" class="section active">
+                <h1 contenteditable="true" id="nt">ملاحظاتي</h1>
+                <div class="editor" contenteditable="true" id="nb"></div>
+            </div>
+            <div id="p" class="section">
+                <h1 contenteditable="true" id="pt">المشاريع</h1>
+                <div class="editor" contenteditable="true" id="pb"></div>
+            </div>
+            <div id="t" class="section">
+                <h1 contenteditable="true" id="tt">المهام</h1>
+                <div class="editor" contenteditable="true" id="tb"></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="slash-menu">
+        <div class="menu-item" onclick="add('h2')">عنوان فرعي</div>
+        <div class="menu-item" onclick="add('todo')">مهمة</div>
+        <div class="menu-item" onclick="add('code')">كود</div>
+    </div>
+
+    <script>
+        function start() {
+            if(document.getElementById('user-in').value.trim()) {
+                localStorage.setItem('h_user', 'active');
+                render();
+            }
+        }
+
+        function render() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            load();
+            setInterval(() => { document.getElementById('clk').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
+        }
+
+        function tab(id, b) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            b.classList.add('active');
+        }
+
+        const menu = document.getElementById('slash-menu');
+        document.querySelectorAll('.editor').forEach(ed => {
+            ed.addEventListener('keyup', (e) => {
+                if (e.key === '/') {
+                    const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+                    menu.style.display = 'block';
+                    menu.style.top = (rect.bottom + window.scrollY) + 'px';
+                    menu.style.left = (rect.left + window.scrollX) + 'px';
+                    window.curr = ed;
+                }
+            });
+        });
+
+        function add(t) {
+            window.curr.innerHTML = window.curr.innerHTML.replace(/\/$/, "");
+            if(t==='h2') window.curr.innerHTML += "<h2>عنوان...</h2>";
+            if(t==='todo') window.curr.innerHTML += "<div><input type='checkbox'> مهمة</div>";
+            if(t==='code') window.curr.innerHTML += "<pre style='background:#eee;padding:10px;'>// كود</pre>";
+            menu.style.display = 'none';
+            save();
+        }
+
+        function save() {
+            const d = { nt:document.getElementById('nt').innerText, nb:document.getElementById('nb').innerHTML, pt:document.getElementById('pt').innerText, pb:document.getElementById('pb').innerHTML, tt:document.getElementById('tt').innerText, tb:document.getElementById('tb').innerHTML };
+            localStorage.setItem('h_data', JSON.stringify(d));
+        }
+
+        function load() {
+            const d = JSON.parse(localStorage.getItem('h_data'));
+            if(d) { document.getElementById('nt').innerText = d.nt; document.getElementById('nb').innerHTML = d.nb; document.getElementById('pt').innerText = d.pt; document.getElementById('pb').innerHTML = d.pb; document.getElementById('tt').innerText = d.tt; document.getElementById('tb').innerHTML = d.tb; }
+        }
+
+        document.addEventListener('input', save);
+        window.onload = () => { if(localStorage.getItem('h_user')) render(); };
+        document.addEventListener('mousedown', (e) => { if(!menu.contains(e.target)) menu.style.display = 'none'; });
+    </script>
+</body>
+</html>
