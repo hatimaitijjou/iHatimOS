@@ -3,120 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iHatimOS - Social Edition</title>
+    <title>iHatimOS - Interactive</title>
     <style>
-        @keyframes bgMove { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
+        /* الخلفية المتحركة */
+        @keyframes flow { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
         body {
-            background: linear-gradient(-45deg, #0a0a0a, #143314, #000000);
-            background-size: 400% 400%; animation: bgMove 10s ease infinite;
-            color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center;
+            background: linear-gradient(-45deg, #050505, #102a10, #000, #0a1a0a);
+            background-size: 400% 400%; animation: flow 15s ease infinite;
+            color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
-        .header { width: 90%; background: rgba(0,255,0,0.1); backdrop-filter: blur(10px); border: 1px solid #0f0; border-radius: 20px; padding: 15px; margin: 20px; text-align: center; }
-        #clock { color: #0f0; font-size: 2.5rem; font-family: monospace; text-shadow: 0 0 15px #0f0; }
-        
-        .main-grid { display: grid; grid-template-columns: 250px 1fr 250px; width: 95%; gap: 20px; margin-bottom: 20px; }
-        
-        /* القائمة الجانبية */
-        .sidebar { background: #1a1a1a; padding: 20px; border-radius: 20px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
-        .sidebar button { background: #333; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; text-align: right; }
-        .sidebar button:hover { background: #0f0; color: #000; }
-        .btn-save { background: #28a745 !important; }
-        .btn-logout { background: #dc3545 !important; }
 
-        /* المحرر الأبيض */
-        .editor-container { background: white; color: black; border-radius: 20px; padding: 20px; position: relative; min-height: 400px; }
-        #editor { min-height: 300px; outline: none; font-size: 1.1rem; }
-        
-        /* نظام التفاعل والدردشة */
-        .social-panel { background: #1a1a1a; padding: 15px; border-radius: 20px; border: 1px solid #333; display: flex; flex-direction: column; }
-        .chat-box { height: 250px; overflow-y: auto; background: #000; padding: 10px; border-radius: 10px; font-size: 0.8rem; margin-bottom: 10px; }
-        .chat-input { background: #222; border: 1px solid #444; color: white; padding: 8px; border-radius: 5px; width: 90%; }
-        
-        .rating-box { margin-top: 20px; text-align: center; border-top: 1px solid #333; padding-top: 10px; }
-        .stars { color: #ffc107; cursor: pointer; font-size: 1.5rem; }
+        /* رأس الصفحة (الساعة) */
+        .top-nav { width: 90%; max-width: 1000px; background: rgba(0,255,0,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0,255,0,0.2); border-radius: 20px; padding: 15px; margin: 20px; text-align: center; }
+        #digital-clock { color: #0f0; font-size: 2.5rem; font-family: monospace; text-shadow: 0 0 15px #0f0; }
+
+        .app-container { display: flex; width: 95%; max-width: 1200px; gap: 20px; flex: 1; margin-bottom: 20px; }
+
+        /* القائمة الجانبية - تحتوي على كل الأزرار */
+        .side-menu { flex: 1; background: rgba(20,20,20,0.9); padding: 25px; border-radius: 25px; border: 1px solid #333; display: flex; flex-direction: column; gap: 12px; }
+        .side-menu h2 { color: #0f0; margin-top: 0; }
+        .side-menu button { 
+            background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); 
+            padding: 14px; border-radius: 12px; cursor: pointer; text-align: right; transition: 0.3s; font-size: 1rem;
+        }
+        .side-menu button:hover { background: #0f0; color: #000; transform: scale(1.02); }
+        .btn-action { font-weight: bold; margin-top: 5px; }
+
+        /* منطقة العمل (المحرر الأبيض) */
+        .workspace { flex: 3; background: white; color: #111; border-radius: 25px; padding: 30px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        #text-editor { min-height: 400px; outline: none; font-size: 1.2rem; line-height: 1.6; }
+
+        /* نافذة الدردشة التفاعلية */
+        .chat-section { flex: 1.2; background: rgba(15,15,15,0.95); padding: 20px; border-radius: 25px; border: 1px solid #0f0; display: flex; flex-direction: column; }
+        #chat-logs { flex: 1; overflow-y: auto; background: #000; border-radius: 15px; padding: 10px; font-size: 0.9rem; margin-bottom: 15px; border: 1px solid #222; }
+        .chat-msg { margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 5px; }
+        .chat-msg b { color: #0f0; }
+        #chat-input { background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 10px; outline: none; }
 
         /* قائمة السلاش */
-        #slash-menu { display: none; position: absolute; background: #222; color: white; border: 1px solid #0f0; border-radius: 10px; width: 180px; z-index: 100; }
-        #slash-menu div { padding: 10px; cursor: pointer; border-bottom: 1px solid #333; }
-        #slash-menu div:hover { background: #0f0; color: #000; }
+        #s-menu { display: none; position: absolute; background: #1a1a1a; color: white; border: 1px solid #0f0; border-radius: 12px; width: 200px; z-index: 1000; }
+        #s-menu div { padding: 12px; cursor: pointer; border-bottom: 1px solid #333; }
+        #s-menu div:hover { background: #0f0; color: #000; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div id="clock">00:00:00</div>
+    <div class="top-nav">
+        <div id="digital-clock">00:00:00</div>
     </div>
 
-    <div class="main-grid">
-        <div class="sidebar">
-            <h2 style="color:#0f0">iHatimOS</h2>
-            <button onclick="changePage('Notes')">📝 Notes</button>
-            <button onclick="changePage('Tasks')">✅ Tasks</button>
-            <button onclick="changePage('Projects')">📂 Projects</button>
-            <button class="btn-save" onclick="save()">💾 Save</button>
-            <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    <div class="app-container">
+        <div class="side-menu">
+            <h2>iHatimOS</h2>
+            <button onclick="nav('الملاحظات')">📍 Notes</button>
+            <button onclick="nav('المهام')">✅ Tasks</button>
+            <button onclick="nav('المشاريع')">📂 Projects</button>
+            
+            <hr style="width:100%; opacity:0.1; margin: 10px 0;">
+            
+            <button onclick="showRatings()" class="btn-action" style="background: #ffc107; color: black;">⭐ تقييمات المستخدمين</button>
+            <button onclick="saveSystem()" class="btn-action" style="background: #28a745;">💾 حفظ البيانات</button>
+            <button onclick="location.reload()" class="btn-action" style="background: #ff4d4d;">🚪 تسجيل الخروج</button>
         </div>
 
-        <div class="editor-container">
-            <h2 id="title">Notes</h2>
+        <div class="workspace">
+            <h2 id="current-title">الملاحظات</h2>
             <hr>
-            <div id="editor" contenteditable="true" onkeyup="doSlash(event)">ابدأ الكتابة واستخدم / للأوامر...</div>
+            <div id="text-editor" contenteditable="true" onkeyup="triggerSlash(event)">ابدأ العمل هنا... أو اكتب /</div>
             
-            <div id="slash-menu">
-                <div onclick="add('<h2>عنوان</h2>')">📌 H2 - عنوان</div>
-                <div onclick="add('<li>مهمة: </li>')">✔️ Task - مهمة</div>
-                <div onclick="add('<hr>')">➖ Line - خط</div>
+            <div id="s-menu">
+                <div onclick="insert('<h2>📌 عنوان فرعي</h2>')">📌 إضافة عنوان</div>
+                <div onclick="insert('<li>✔️ مهمة: </li>')">✔️ إضافة مهمة</div>
+                <div onclick="insert('<hr>')">➖ إضافة خط</div>
+                <div onclick="document.getElementById('text-editor').innerHTML=''; hideM();">🗑️ مسح الكل</div>
             </div>
         </div>
 
-        <div class="social-panel">
-            <h3 style="color:#0f0; margin-top:0">دردشة المستخدمين 💬</h3>
-            <div class="chat-box" id="chat">
-                <div><b>نظام:</b> مرحباً بكم في iHatimOS!</div>
+        <div class="chat-section">
+            <h3 style="color:#0f0; margin-top:0;">الدردشة العامة 💬</h3>
+            <div id="chat-logs">
+                <div class="chat-msg"><b>نظام:</b> أهلاً بك في مجتمع iHatimOS!</div>
             </div>
-            <input type="text" class="chat-input" placeholder="اكتب رسالة..." onkeypress="sendChat(event)">
-            
-            <div class="rating-box">
-                <p>تقييمك للنظام؟</p>
-                <div class="stars" onclick="rate()">⭐⭐⭐⭐⭐</div>
-                <small id="rate-count">5/5 (بناءً على 124 تقييم)</small>
-            </div>
+            <input type="text" id="chat-input" placeholder="اكتب وتفاعل مع الآخرين..." onkeypress="handleChat(event)">
         </div>
     </div>
 
-    <div style="padding: 20px; opacity: 0.5;">Backerid by © 2025 Hatim Ait Ijjou</div>
+    <div style="padding: 15px; opacity: 0.4; font-size: 0.8rem;">
+        Developed by Hatim Ait Ijjou &copy; 2025
+    </div>
 
     <script>
-        function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
-        setInterval(updateClock, 1000); updateClock();
+        // الساعة
+        function tick() { document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-GB'); }
+        setInterval(tick, 1000); tick();
 
-        function doSlash(e) {
-            let ed = document.getElementById('editor');
-            let m = document.getElementById('slash-menu');
-            if(ed.innerText.endsWith('/')) {
-                m.style.display = 'block'; m.style.top = '50px'; m.style.left = '20px';
-            } else { m.style.display = 'none'; }
-        }
+        // التبديل
+        function nav(title) { document.getElementById('current-title').innerText = title; }
 
-        function add(h) {
-            let ed = document.getElementById('editor');
-            ed.innerHTML = ed.innerHTML.replace('/', '') + h;
-            document.getElementById('slash-menu').style.display = 'none';
-        }
-
-        function sendChat(e) {
-            if(e.key === 'Enter' && e.target.value != '') {
-                let c = document.getElementById('chat');
-                c.innerHTML += `<div><b>أنت:</b> ${e.target.value}</div>`;
-                e.target.value = '';
-                c.scrollTop = c.scrollHeight;
+        // التقييمات كرسالة منبثقة (Popup)
+        function showRatings() {
+            let r = prompt("ما هو تقييمك للنظام من 5؟ (مثلاً: 5)", "5");
+            if(r) {
+                alert("شكراً لك! تقييمك (" + r + "/5) يساعدنا على التطور. \nمتوسط التقييمات الحالي: 4.8/5");
             }
         }
 
-        function rate() { alert("شكراً لتقييمك! تم إرسال 5 نجوم للمطور حاتم."); }
-        function save() { alert("تم حفظ عملك في السحابة!"); }
-        function logout() { window.location.reload(); }
-        function changePage(t) { document.getElementById('title').innerText = t; }
+        // الدردشة
+        function handleChat(e) {
+            if(e.key === 'Enter' && e.target.value !== '') {
+                let log = document.getElementById('chat-logs');
+                log.innerHTML += `<div class="chat-msg"><b>أنت:</b> ${e.target.value}</div>`;
+                e.target.value = '';
+                log.scrollTop = log.scrollHeight;
+            }
+        }
+
+        // السلاش
+        function triggerSlash(e) {
+            let ed = document.getElementById('text-editor');
+            let m = document.getElementById('s-menu');
+            if(ed.innerText.trim().endsWith('/')) {
+                m.style.display = 'block'; m.style.top = '100px'; m.style.left = '40px';
+            } else { m.style.display = 'none'; }
+        }
+
+        function insert(h) {
+            let ed = document.getElementById('text-editor');
+            ed.innerHTML = ed.innerHTML.replace('/', '') + h;
+            hideM();
+        }
+        function hideM() { document.getElementById('s-menu').style.display = 'none'; }
+        function saveSystem() { alert("تم حفظ تقدمك في النظام بنجاح! ✅"); }
     </script>
 </body>
 </html>
