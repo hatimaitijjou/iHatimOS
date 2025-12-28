@@ -3,201 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iHatimOS | لوحة التحكم الذكية</title>
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
+    <title>iHatimOS - لوحة التحكم الذكية</title>
     <style>
-        :root {
-            --primary: #ff4757;
-            --sidebar-bg: #121214;
-            --main-bg: #ffffff;
-            --faded: rgba(0, 0, 0, 0.2);
+        /* تنسيق عام للخلفية والجسم ليكون مناسباً للهاتف */
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: var(--sidebar-bg); height: 100vh; display: flex; overflow: hidden; }
-
-        /* شاشة الدخول */
-        #login-screen {
-            position: fixed; inset: 0; background: radial-gradient(circle, #1e1e2f, #0f0c29);
-            display: flex; justify-content: center; align-items: center; z-index: 9999;
-        }
-        .login-box {
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
-            padding: 40px; border-radius: 25px; text-align: center; width: 350px;
-            border: 1px solid rgba(255,255,255,0.1); color: white;
-        }
-        .login-box h1 span { color: var(--primary); }
-        .login-box input {
-            width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none;
-            background: rgba(255,255,255,0.1); color: white; text-align: center; outline: none;
-        }
-        .login-box button {
-            width: 100%; padding: 12px; border-radius: 10px; border: none;
-            background: var(--primary); color: white; font-weight: bold; cursor: pointer;
+        /* تنسيق الساعة الخضراء المضيئة */
+        #hatim-clock {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #00ff00;
+            padding: 20px;
+            margin-top: 10px;
         }
 
-        /* الواجهة الرئيسية */
-        #main-app { display: none; width: 100%; height: 100vh; }
-        .sidebar { width: 260px; background: var(--sidebar-bg); padding: 40px 20px; display: flex; flex-direction: column; }
-        .nav-btn {
-            padding: 15px; border-radius: 12px; margin-bottom: 8px; cursor: pointer;
-            display: flex; align-items: center; gap: 12px; color: #777; transition: 0.3s;
+        /* الحاوية الرئيسية للمحتوى */
+        .container {
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            flex-grow: 1;
         }
-        .nav-btn.active, .nav-btn:hover { background: rgba(255,255,255,0.05); color: white; }
-        .nav-btn.active { border-right: 4px solid var(--primary); }
 
-        .workspace { flex: 1; background: var(--main-bg); margin: 15px; border-radius: 35px; padding: 50px; overflow-y: auto; position: relative; }
-        <div id="hatim-clock" style="color: #00ff00; font-family: 'Courier New', monospace; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ff00; text-align: left; padding: 10px;">
-  00:00:00
-</div>
-
-<script>
-function updateClock() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('hatim-clock').textContent = hours + ":" + minutes + ":" + seconds;
-}
-setInterval(updateClock, 1000);
-updateClock(); // لتشغيلها فوراً
-</script>
-        .section { display: none; }
-        .section.active { display: block; }
-
-        h1 { font-size: 3.5rem; margin-bottom: 20px; outline: none; color: #111; }
-        .editor { font-size: 1.2rem; line-height: 1.7; outline: none; min-height: 450px; position: relative; color: #333; }
-        
-        /* النص الخافت */
-        .editor:empty:before { content: "اكتب / للأوامر..."; color: var(--faded); font-style: italic; pointer-events: none; }
-
-        /* قائمة السلاش */
-        #slash-menu {
-            position: absolute; background: white; border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none;
-            width: 200px; border: 1px solid #eee; z-index: 1000; overflow: hidden;
+        /* تنسيق اسم المبرمج في الأسفل */
+        .footer {
+            background: rgba(255, 255, 255, 0.05);
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #333;
         }
-        .menu-item { padding: 12px 15px; cursor: pointer; color: #444; display: flex; align-items: center; gap: 10px; }
-        .menu-item:hover { background: #f8f8f8; color: var(--primary); }
+
+        /* تنسيق الزر الاحترافي */
+        .logout-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+            margin-top: 15px;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff1a1a;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h1>iHatim<span>OS</span></h1>
-            <input type="text" id="user-in" placeholder="اسم المستخدم">
-            <button onclick="start()">دخول</button>
-        </div>
+    <div id="hatim-clock">00:00:00</div>
+
+    <div class="container">
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">iHatimOS</h1>
+        <p>مرحباً بك في نظامك الذكي المتكامل</p>
+        
+        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
     </div>
 
-    <div id="main-app">
-        <aside class="sidebar">
-            <div style="color:white; font-size:1.5rem; font-weight:bold; margin-bottom:40px;">iHatim<span>OS</span></div>
-            <div class="nav-btn active" onclick="tab('n', this)"><i class="fas fa-pen"></i> الملاحظات</div>
-            <div class="nav-btn" onclick="tab('p', this)"><i class="fas fa-code"></i> المشاريع</div>
-            <div class="nav-btn" onclick="tab('t', this)"><i class="fas fa-check"></i> المهام</div>
-        </aside>
-
-        <main class="workspace">
-            <div class="clock" id="clk">00:00:00</div>
-            <div id="n" class="section active">
-                <h1 contenteditable="true" id="nt">ملاحظاتي</h1>
-                <div class="editor" contenteditable="true" id="nb"></div>
-            </div>
-            <div id="p" class="section">
-                <h1 contenteditable="true" id="pt">المشاريع</h1>
-                <div class="editor" contenteditable="true" id="pb"></div>
-            </div>
-            <div id="t" class="section">
-                <h1 contenteditable="true" id="tt">المهام</h1>
-                <div class="editor" contenteditable="true" id="tb"></div>
-            </div>
-        </main>
-    </div>
-
-    <div id="slash-menu">
-        <div class="menu-item" onclick="add('h2')">عنوان فرعي</div>
-        <div class="menu-item" onclick="add('todo')">مهمة</div>
-        <div class="menu-item" onclick="add('code')">كود</div>
+    <div class="footer">
+        <h3 style="margin: 0; color: #ddd;">صنع من طرف المبرمج حاتم ايت اجو</h3>
     </div>
 
     <script>
-        function start() {
-            if(document.getElementById('user-in').value.trim()) {
-                localStorage.setItem('h_user', 'active');
-                render();
+        // دالة تحديث الساعة
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('hatim-clock').textContent = hours + ":" + minutes + ":" + seconds;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // دالة تسجيل الخروج
+        function logout() {
+            let confirmLogout = confirm("هل تريد حقاً تسجيل الخروج من iHatimOS؟");
+            if (confirmLogout) {
+                alert("مع السلامة يا مبرمج حاتم! نراك قريباً.");
+                document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%'>تم تسجيل الخروج بنجاح.. وداعاً!</h1>";
+                setTimeout(() => {
+                    window.location.href = "about:blank";
+                }, 2000);
             }
         }
-
-        function render() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-            load();
-            setInterval(() => { document.getElementById('clk').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
-        }
-
-        function tab(id, b) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            b.classList.add('active');
-        }
-
-        const menu = document.getElementById('slash-menu');
-        document.querySelectorAll('.editor').forEach(ed => {
-            ed.addEventListener('keyup', (e) => {
-                if (e.key === '/') {
-                    const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-                    menu.style.display = 'block';
-                    menu.style.top = (rect.bottom + window.scrollY) + 'px';
-                    menu.style.left = (rect.left + window.scrollX) + 'px';
-                    window.curr = ed;
-                }
-            });
-        });
-
-        function add(t) {
-            window.curr.innerHTML = window.curr.innerHTML.replace(/\/$/, "");
-            if(t==='h2') window.curr.innerHTML += "<h2>عنوان...</h2>";
-            if(t==='todo') window.curr.innerHTML += "<div><input type='checkbox'> مهمة</div>";
-            if(t==='code') window.curr.innerHTML += "<pre style='background:#eee;padding:10px;'>// كود</pre>";
-            menu.style.display = 'none';
-            save();
-        }
-
-        function save() {
-            const d = { nt:document.getElementById('nt').innerText, nb:document.getElementById('nb').innerHTML, pt:document.getElementById('pt').innerText, pb:document.getElementById('pb').innerHTML, tt:document.getElementById('tt').innerText, tb:document.getElementById('tb').innerHTML };
-            localStorage.setItem('h_data', JSON.stringify(d));
-        }
-
-        function load() {
-            const d = JSON.parse(localStorage.getItem('h_data'));
-            if(d) { document.getElementById('nt').innerText = d.nt; document.getElementById('nb').innerHTML = d.nb; document.getElementById('pt').innerText = d.pt; document.getElementById('pb').innerHTML = d.pb; document.getElementById('tt').innerText = d.tt; document.getElementById('tb').innerHTML = d.tb; }
-        }
-
-        document.addEventListener('input', save);
-        window.onload = () => { if(localStorage.getItem('h_user')) render(); };
-        document.addEventListener('mousedown', (e) => { if(!menu.contains(e.target)) menu.style.display = 'none'; });
-       </script>
-<h3 style="text-align: center; color: white;">صنع من طرف المبرمج حاتم ايت اجو</h3>
-    <button onclick="logout()" style="background-color: #ff4d4d; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-family: 'Cairo', sans-serif;">
-  تسجيل الخروج
-</button>
-
-<script>
-function logout() {
-    let confirmLogout = confirm("هل تريد حقاً تسجيل الخروج من iHatimOS؟");
-    if (confirmLogout) {
-        alert("مع السلامة ! نراك قريباً.");
-        window.close(); // يحاول إغلاق النافذة
-        window.location.href = "about:blank"; // يحول الصفحة لبيضاء إذا لم يغلق المتصفح النافذة
-    }
-}
-</script>
-</body>
     </script>
 </body>
 </html>
+      
