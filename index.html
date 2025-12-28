@@ -3,107 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iHatimOS Pro - Slash Edition</title>
+    <title>iHatimOS - منصة الإنتاجية</title>
     <style>
-        body { background-color: #121212; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-        #hatim-clock { color: #00ff00; font-family: 'Courier New', monospace; font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px #00ff00; text-align: center; padding: 10px; }
+        :root { --main-green: #00ff00; --bg-color: #121212; --panel-color: #1e1e1e; }
+        body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
         
-        .main-container { display: flex; flex-wrap: wrap; flex: 1; padding: 15px; gap: 15px; }
-        .sidebar { flex: 1; min-width: 200px; background: #1e1e1e; padding: 20px; border-radius: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .sidebar button { background: #333; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; text-align: right; transition: 0.3s; font-size: 1rem; }
-        .sidebar button:hover { background: #00ff00; color: black; transform: scale(1.02); }
+        /* الساعة الرقمية المضيئة */
+        #system-clock { color: var(--main-green); font-family: 'Courier New', monospace; font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px var(--main-green); text-align: center; padding: 10px; }
         
-        .white-board { flex: 4; min-width: 320px; background: white; color: black; border-radius: 20px; padding: 30px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #editor { min-height: 350px; outline: none; font-size: 1.2rem; line-height: 1.6; }
+        .main-layout { display: flex; flex-wrap: wrap; flex: 1; padding: 15px; gap: 15px; }
         
-        /* قائمة السلاش الاحترافية */
+        /* القائمة الجانبية للأزرار */
+        .sidebar { flex: 1; min-width: 200px; background: var(--panel-color); padding: 20px; border-radius: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .sidebar button { background: #333; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; text-align: right; font-size: 1rem; transition: 0.3s; }
+        .sidebar button:hover { background: var(--main-green); color: black; }
+        
+        /* المساحة البيضاء للكتابة (الطابع القديم) */
+        .editor-container { flex: 4; min-width: 320px; background: white; color: black; border-radius: 20px; padding: 30px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #main-editor { min-height: 350px; outline: none; font-size: 1.2rem; line-height: 1.6; }
+        
+        /* قائمة السلاش */
         #slash-menu {
             display: none; position: absolute; background: #252525; color: white; border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 1000; width: 220px; overflow: hidden; border: 1px solid #444;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 1000; width: 220px; border: 1px solid #444;
         }
-        #slash-menu div { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 10px; }
-        #slash-menu div:hover { background: #00ff00; color: black; }
+        #slash-menu div { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #333; }
+        #slash-menu div:hover { background: var(--main-green); color: black; }
 
-        .stats { font-size: 0.8rem; color: #666; margin-top: 15px; text-align: left; border-top: 1px solid #eee; padding-top: 10px; }
-        .footer { background: #000; text-align: center; padding: 15px; font-size: 0.9rem; color: #aaa; }
+        .stats-bar { font-size: 0.8rem; color: #666; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; }
+        .footer { background: #000; text-align: center; padding: 15px; font-size: 0.8rem; color: #777; }
     </style>
 </head>
 <body>
 
-    <div id="hatim-clock">00:00:00</div>
+    <div id="system-clock">00:00:00</div>
 
-    <div class="main-container">
+    <div class="main-layout">
         <div class="sidebar">
-            <h2 style="color: #00ff00; margin: 0 0 10px 0;">iHatimOS Pro</h2>
-            <button onclick="changeTitle('📝 ملاحظاتي الذكية')">📝 الملاحظات</button>
-            <button onclick="changeTitle('✅ قائمة المهام')">✅ المهام</button>
-            <button onclick="changeTitle('📂 مشاريع حاتم')">📂 المشاريع</button>
-            <button onclick="saveData()" style="background: #28a745; color: white;">💾 حفظ يدوي</button>
-            <button onclick="logout()" style="background: #ff4d4d; margin-top: auto;">🚪 خروج آمن</button>
+            <h2 style="color: var(--main-green); margin: 0 0 15px 0;">iHatimOS</h2>
+            <button onclick="updateView('📝 الملاحظات')">📝 الملاحظات</button>
+            <button onclick="updateView('✅ المهام اليومية')">✅ المهام</button>
+            <button onclick="updateView('📂 المشاريع')">📂 المشاريع</button>
+            <button onclick="saveContent()" style="background: #28a745; color: white;">💾 حفظ البيانات</button>
+            <button onclick="userLogout()" style="background: #ff4d4d; margin-top: auto;">🚪 تسجيل الخروج</button>
         </div>
 
-        <div class="white-board">
-            <h1 id="page-title">ملاحظاتي</h1>
+        <div class="editor-container">
+            <h1 id="view-title">الملاحظات</h1>
             <hr>
-            <div id="editor" contenteditable="true" oninput="handleInput(event)" onkeyup="checkSlash(event)">
-                اكتب <b>/</b> لاستخدام الأوامر السريعة...
+            <div id="main-editor" contenteditable="true" oninput="runLogic()" onkeyup="handleSlash(event)">
+                ابدأ الكتابة هنا، أو استخدم <b>/</b> للأوامر السريعة...
             </div>
             
             <div id="slash-menu">
-                <div onclick="execCommand('<h2>عنوان جديد...</h2>')">📌 H2 - عنوان فرعي</div>
-                <div onclick="execCommand('<li>• مهمة جديدة...</li>')">✔️ Task - قائمة مهام</div>
-                <div onclick="execCommand('<hr>')">➖ Line - خط فاصل</div>
-                <div onclick="document.getElementById('editor').innerHTML = ''; hideMenu();">🗑️ Clear - مسح الكل</div>
+                <div onclick="applyCmd('<h2>عنوان جديد...</h2>')">📌 H2 - إضافة عنوان</div>
+                <div onclick="applyCmd('<li>• مهمة جديدة...</li>')">✔️ Task - إضافة مهمة</div>
+                <div onclick="applyCmd('<hr>')">➖ Line - خط فاصل</div>
+                <div onclick="clearAll()">🗑️ Clear - مسح المحتوى</div>
             </div>
 
-            <div class="stats">الكلمات: <span id="word-count">0</span> | تم الحفظ تلقائياً ✅</div>
+            <div class="stats-bar">
+                <span>الكلمات: <span id="word-count">0</span></span>
+                <span>النظام جاهز ✅</span>
+            </div>
         </div>
     </div>
 
-    <div class="footer">صنع بكل فخر من طرف المبرمج حاتم ايت اجو</div>
+    <div class="footer">
+        تم التطوير بواسطة حاتم ايت اجو &copy; 2025
+    </div>
 
     <script>
-        // تحديث الساعة المستمر
-        function updateClock() { document.getElementById('hatim-clock').textContent = new Date().toLocaleTimeString('en-GB'); }
+        function updateClock() { document.getElementById('system-clock').textContent = new Date().toLocaleTimeString('en-GB'); }
         setInterval(updateClock, 1000); updateClock();
 
-        // نظام السلاش commands
-        function checkSlash(e) {
-            const editor = document.getElementById('editor');
+        function handleSlash(e) {
+            const editor = document.getElementById('main-editor');
             const menu = document.getElementById('slash-menu');
-            const selection = window.getSelection();
-            
             if (editor.innerText.endsWith('/')) {
                 menu.style.display = 'block';
-                menu.style.top = '120px'; 
-                menu.style.right = '30px';
-            } else if (e.key === 'Escape') { hideMenu(); }
+                menu.style.top = '100px'; menu.style.right = '40px';
+            } else { menu.style.display = 'none'; }
         }
 
-        function execCommand(html) {
-            const editor = document.getElementById('editor');
+        function applyCmd(html) {
+            const editor = document.getElementById('main-editor');
             editor.innerHTML = editor.innerHTML.replace('/', '') + html;
-            hideMenu();
-            saveData();
+            document.getElementById('slash-menu').style.display = 'none';
+            saveContent();
         }
 
-        function hideMenu() { document.getElementById('slash-menu').style.display = 'none'; }
-
-        // عداد الكلمات والحفظ التلقائي
-        function handleInput() {
-            const text = document.getElementById('editor').innerText;
+        function runLogic() {
+            const text = document.getElementById('main-editor').innerText;
             const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
             document.getElementById('word-count').innerText = words;
-            localStorage.setItem('hatim_pro_data', document.getElementById('editor').innerHTML);
+            localStorage.setItem('hatim_os_user_data', document.getElementById('main-editor').innerHTML);
         }
 
-        function changeTitle(t) { document.getElementById('page-title').innerText = t; }
-        function saveData() { localStorage.setItem('hatim_pro_data', document.getElementById('editor').innerHTML); alert("تم حفظ البيانات في ذاكرة النظام! ✅"); }
-        function logout() { if(confirm("هل تود الخروج من iHatimOS؟")) window.location.href="about:blank"; }
+        function updateView(title) { document.getElementById('view-title').innerText = title; }
+        function saveContent() { localStorage.setItem('hatim_os_user_data', document.getElementById('main-editor').innerHTML); alert("تم حفظ البيانات بنجاح!"); }
+        function clearAll() { if(confirm("سيتم مسح كل شيء، هل أنت متأكد؟")) { document.getElementById('main-editor').innerHTML = ''; document.getElementById('slash-menu').style.display = 'none'; } }
+        function userLogout() { if(confirm("هل تريد مغادرة النظام؟")) window.location.href="about:blank"; }
 
         window.onload = () => {
-            const saved = localStorage.getItem('hatim_pro_data');
-            if(saved) { document.getElementById('editor').innerHTML = saved; handleInput(); }
+            const data = localStorage.getItem('hatim_os_user_data');
+            if(data) document.getElementById('main-editor').innerHTML = data;
+            runLogic();
         }
     </script>
 </body>
