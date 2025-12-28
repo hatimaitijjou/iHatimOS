@@ -3,67 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iHatimOS - لوحة التحكم الذكية</title>
+    <title>iHatimOS - المبرمج حاتم</title>
     <style>
-        /* تنسيق عام للخلفية والجسم ليكون مناسباً للهاتف */
+        :root {
+            --primary-green: #00ff00;
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
+        }
+
         body {
-            background-color: #1a1a1a;
+            background-color: var(--bg-dark);
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
             align-items: center;
+            min-height: 100vh;
         }
 
-        /* تنسيق الساعة الخضراء المضيئة */
+        /* الساعة الخضراء - متجاوبة */
         #hatim-clock {
-            color: #00ff00;
+            color: var(--primary-green);
             font-family: 'Courier New', monospace;
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 8vw, 2.5rem);
             font-weight: bold;
-            text-shadow: 0 0 10px #00ff00;
-            padding: 20px;
-            margin-top: 10px;
+            text-shadow: 0 0 15px var(--primary-green);
+            margin: 20px 0;
         }
 
-        /* الحاوية الرئيسية للمحتوى */
-        .container {
+        /* العنوان الرئيسي */
+        h1 { font-size: clamp(1.2rem, 5vw, 2rem); margin: 10px 0; }
+
+        /* حاوية الأدوات (الملاحظات والمهام) */
+        .app-container {
             width: 90%;
-            max-width: 800px;
-            text-align: center;
-            flex-grow: 1;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
         }
 
-        /* تنسيق اسم المبرمج في الأسفل */
-        .footer {
-            background: rgba(255, 255, 255, 0.05);
-            width: 100%;
-            padding: 20px 0;
-            text-align: center;
-            border-top: 1px solid #333;
+        .tool-section {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
         }
 
-        /* تنسيق الزر الاحترافي */
-        .logout-btn {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 12px 25px;
+        .tool-section h2 { color: var(--primary-green); font-size: 1.2rem; }
+
+        /* منطقة الكتابة (الملاحظات) */
+        [contenteditable="true"] {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+            outline: none;
+            border: 1px solid #444;
+            text-align: right;
+        }
+
+        /* أزرار التحكم */
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+        
+        button {
+            padding: 10px 20px;
             border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
+            border: none;
             cursor: pointer;
+            font-weight: bold;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
-            margin-top: 15px;
         }
 
-        .logout-btn:hover {
-            background-color: #ff1a1a;
-            transform: scale(1.05);
+        .logout-btn { background: #ff4d4d; color: white; }
+        .save-btn { background: var(--primary-green); color: black; }
+
+        /* التذييل */
+        .footer {
+            margin-top: auto;
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            background: #000;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -71,41 +96,65 @@
 
     <div id="hatim-clock">00:00:00</div>
 
-    <div class="container">
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">iHatimOS</h1>
-        <p>مرحباً بك في نظامك الذكي المتكامل</p>
-        
-        <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+    <h1>نظام iHatimOS الذكي</h1>
+
+    <div class="app-container">
+        <div class="tool-section">
+            <h2>📝 ملاحظاتي</h2>
+            <div id="notes-area" contenteditable="true" placeholder="اكتب ملاحظاتك هنا..."></div>
+        </div>
+
+        <div class="tool-section">
+            <h2>🚀 المهام والمشاريع</h2>
+            <div id="tasks-area" contenteditable="true">
+                - أضف مهمة جديدة هنا...
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="save-btn" onclick="saveData()">💾 حفظ التغييرات</button>
+            <button class="logout-btn" onclick="logout()">🚪 تسجيل الخروج</button>
+        </div>
     </div>
 
     <div class="footer">
-        <h3 style="margin: 0; color: #ddd;">صنع من طرف المبرمج حاتم ايت اجو</h3>
+        صنع من طرف المبرمج حاتم ايت اجو
     </div>
 
     <script>
-        // دالة تحديث الساعة
+        // تحديث الساعة
         function updateClock() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('hatim-clock').textContent = hours + ":" + minutes + ":" + seconds;
+            document.getElementById('hatim-clock').textContent = now.toLocaleTimeString('en-GB');
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // دالة تسجيل الخروج
+        // حفظ البيانات في المتصفح (لحفظ ملاحظاتك)
+        function saveData() {
+            const notes = document.getElementById('notes-area').innerHTML;
+            const tasks = document.getElementById('tasks-area').innerHTML;
+            localStorage.setItem('hatim_notes', notes);
+            localStorage.setItem('hatim_tasks', tasks);
+            alert("تم حفظ كل شيء يا مبرمج حاتم! ✅");
+        }
+
+        // تحميل البيانات عند فتح الموقع
+        window.onload = () => {
+            if(localStorage.getItem('hatim_notes')) 
+                document.getElementById('notes-area').innerHTML = localStorage.getItem('hatim_notes');
+            if(localStorage.getItem('hatim_tasks')) 
+                document.getElementById('tasks-area').innerHTML = localStorage.getItem('hatim_tasks');
+        };
+
+        // تسجيل الخروج
         function logout() {
-            let confirmLogout = confirm("هل تريد حقاً تسجيل الخروج من iHatimOS؟");
-            if (confirmLogout) {
-                alert("مع السلامة يا مبرمج حاتم! نراك قريباً.");
-                document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%'>تم تسجيل الخروج بنجاح.. وداعاً!</h1>";
-                setTimeout(() => {
-                    window.location.href = "about:blank";
-                }, 2000);
+            if(confirm("هل تريد إغلاق iHatimOS؟")) {
+                alert("إلى اللقاء يا حاتم!");
+                document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px;'>تم تسجيل الخروج..</h2>";
+                setTimeout(() => window.location.href = "about:blank", 2000);
             }
         }
     </script>
 </body>
 </html>
-      
