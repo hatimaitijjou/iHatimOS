@@ -1,197 +1,49 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hatim Space | Legendary KUL</title>
-    <style>
-        :root { --primary: #00ff41; --bg: #050505; --sidebar: #0a0a0a; --page: #ffffff; --text: #eee; }
-        
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* شاشة دخول سينمائية */
-        #login-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #111 0%, #000 100%); z-index: 10000; display: flex; align-items: center; justify-content: center; transition: 0.5s; }
-        .login-card { background: rgba(15,15,15,0.9); padding: 50px; border-radius: 30px; border: 1px solid var(--primary); text-align: center; width: 350px; backdrop-filter: blur(20px); box-shadow: 0 0 50px rgba(0,255,65,0.1); }
-        .login-card input { width: 100%; padding: 15px; margin: 12px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: white; outline: none; transition: 0.3s; }
-        .login-card input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0,255,65,0.2); }
-
-        /* شريط الأدوات الأسطوري */
-        .toolbar { background: var(--sidebar); padding: 12px 25px; display: flex; gap: 12px; border-bottom: 1px solid #222; align-items: center; justify-content: space-between; }
-        .tool-group { display: flex; gap: 8px; align-items: center; }
-        .t-btn { background: #151515; border: 1px solid #333; color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-weight: bold; }
-        .t-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
-
-        /* ميزة تغيير الألوان */
-        .color-picker { display: flex; gap: 8px; background: #111; padding: 8px; border-radius: 12px; border: 1px solid #222; }
-        .color-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
-        .color-dot:hover { transform: scale(1.2); }
-
-        .main-container { flex: 1; display: flex; overflow: hidden; }
-
-        /* الدردشة (KUL) */
-        #chat-sidebar { width: 320px; background: var(--sidebar); border-left: 1px solid #222; display: flex; flex-direction: column; }
-        #chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
-        .msg { background: #151515; padding: 12px 15px; border-radius: 15px; border-right: 4px solid var(--primary); font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        .msg b { color: var(--primary); display: block; font-size: 11px; margin-bottom: 5px; text-transform: uppercase; }
-
-        /* المحرر (Notion + Word) */
-        .workspace { flex: 1; padding: 40px; overflow-y: auto; background: #080808; display: flex; justify-content: center; position: relative; }
-        #editor { width: 100%; max-width: 850px; min-height: 1100px; background: var(--page); color: #1a1a1a; padding: 80px; outline: none; border-radius: 15px; font-size: 19px; line-height: 1.8; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-
-        /* قائمة السلاش */
-        #slash-menu { position: absolute; background: #0f0f0f; border: 1px solid var(--primary); border-radius: 15px; width: 250px; display: none; z-index: 1000; padding: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
-        .slash-item { padding: 12px 15px; cursor: pointer; border-radius: 10px; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
-        .slash-item:hover { background: var(--primary); color: black; font-weight: bold; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hatim Space</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-functions-compat.js"></script>
 </head>
+
 <body>
+<header>
+  <h1 id="title"></h1>
+  <select onchange="setLang(this.value)">
+    <option value="en">EN</option>
+    <option value="ar">AR</option>
+    <option value="fr">FR</option>
+  </select>
+</header>
 
-    <div id="login-screen">
-        <div class="login-card">
-            <h1 style="color:var(--primary); margin:0; font-size: 2.5rem; letter-spacing: 2px;">HATIM SPACE</h1>
-            <p style="color:#555; margin-bottom:30px;">LEGENDARY KUL EDITION</p>
-            <input type="text" id="user-name" placeholder="اسم المستخدم">
-            <input type="password" id="pass" placeholder="كلمة السر (1234)">
-            <button class="t-btn" style="width:100%; background:var(--primary); color:black; font-size:1.1rem;" onclick="launch()">فتح الفضاء</button>
-        </div>
-    </div>
+<main>
+  <div id="editor" contenteditable="true">Write something…</div>
+  <button onclick="aiRewrite()">✨ AI Rewrite</button>
 
-    <header class="toolbar">
-        <div class="tool-group">
-            <span style="color:var(--primary); font-weight:bold; font-size:1.2rem; margin-left:20px;">🪐 HATIM OS</span>
-            <button class="t-btn" onclick="exec('bold')">B</button>
-            <button class="t-btn" onclick="exec('italic')">I</button>
-            <button class="t-btn" onclick="exec('underline')">U</button>
-        </div>
+  <div id="chat">
+    <div id="messages"></div>
+    <input id="msg" placeholder="Message…" onkeydown="if(event.key==='Enter')send()">
+    <button onclick="send()">Send</button>
+  </div>
 
-        <div class="tool-group">
-            <span style="font-size: 0.8rem; color:#666;">الثيم:</span>
-            <div class="color-picker">
-                <div class="color-dot" style="background:#00ff41" onclick="changeColor('#00ff41')"></div>
-                <div class="color-dot" style="background:#00d4ff" onclick="changeColor('#00d4ff')"></div>
-                <div class="color-dot" style="background:#ff007b" onclick="changeColor('#ff007b')"></div>
-                <div class="color-dot" style="background:#ffea00" onclick="changeColor('#ffea00')"></div>
-            </div>
-        </div>
+  <div>
+    <button onclick="subscribe('pro')">Subscribe Pro</button>
+    <button onclick="subscribe('team')">Subscribe Team</button>
+  </div>
+</main>
 
-        <button class="t-btn" onclick="save()" style="background:#0066ff">💾 تصدير العمل</button>
-    </header>
-
-    <div class="main-container">
-        <div class="workspace">
-            <div id="editor" contenteditable="true" spellcheck="false">
-                <h1>مرحبا بك في عصر الاحتراف 🚀</h1>
-                <p>اكتب <b>/</b> لتكتشف القائمة السحرية...</p>
-            </div>
-            <div id="slash-menu">
-                <div class="slash-item" onclick="insert('h1')"><span>📝</span> عنوان عريض</div>
-                <div class="slash-item" onclick="insert('todo')"><span>✅</span> قائمة مهام تفاعلية</div>
-                <div class="slash-item" onclick="insert('code')"><span>💻</span> صندوق كود برمجي</div>
-                <div class="slash-item" onclick="insert('note')"><span>💡</span> ملاحظة مميزة</div>
-            </div>
-        </div>
-
-        <div id="chat-sidebar">
-            <div style="padding:20px; border-bottom:1px solid #222; font-weight:bold; color:var(--primary); display:flex; justify-content:space-between;">
-                <span>دردشة الفريق</span>
-                <span id="status">● LIVE</span>
-            </div>
-            <div id="chat-messages"></div>
-            <div class="chat-input-area" style="padding:20px; background:#080808; border-top:1px solid #222;">
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="chat-input" placeholder="اكتب لزملائك..." onkeypress="if(event.key==='Enter') send()" style="flex:1; background:#111; border:1px solid #333; color:white; padding:12px; border-radius:10px; outline:none;">
-                    <button class="t-btn" onclick="send()">↗️</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
-    <script>
-        // الربط الأسطوري بـ Firebase
-        const firebaseConfig = {
-          apiKey: "AIzaSyBYW9x3xQvcZugc0mJx5iFbByPtGkXNx4M",
-          authDomain: "hatim-space-4f7e8.firebaseapp.com",
-          projectId: "hatim-space-4f7e8",
-          storageBucket: "hatim-space-4f7e8.firebasestorage.app",
-          messagingSenderId: "1014020499692",
-          appId: "1:1014020499692:web:37e023621b0ff9ee59ddc9"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        let myName = "";
-
-        function launch() {
-            const n = document.getElementById('user-name').value;
-            if(n && document.getElementById('pass').value === "1234") {
-                myName = n;
-                document.getElementById('login-screen').style.opacity = '0';
-                setTimeout(() => document.getElementById('login-screen').style.display = 'none', 500);
-                listen();
-            }
-        }
-
-        // تغيير ألوان النظام حياً
-        function changeColor(hex) {
-            document.documentElement.style.setProperty('--primary', hex);
-        }
-
-        // محرك السلاش
-        const editor = document.getElementById('editor');
-        const menu = document.getElementById('slash-menu');
-        editor.addEventListener('keyup', (e) => {
-            const sel = window.getSelection();
-            if(sel.rangeCount > 0) {
-                const range = sel.getRangeAt(0);
-                const text = range.startContainer.textContent.slice(0, range.startOffset);
-                if(text.endsWith('/')) {
-                    const rect = range.getBoundingClientRect();
-                    menu.style.display = 'block';
-                    menu.style.top = (rect.bottom + window.scrollY - 80) + 'px';
-                    menu.style.left = rect.left + 'px';
-                } else { menu.style.display = 'none'; }
-            }
-        });
-
-        function insert(type) {
-            editor.focus();
-            document.execCommand('delete', false, null);
-            if(type === 'h1') document.execCommand('formatBlock', false, 'H1');
-            if(type === 'todo') document.execCommand('insertHTML', false, '<div style="display:flex; gap:10px;"><input type="checkbox"> <span>مهمة...</span></div><br>');
-            if(type === 'code') document.execCommand('insertHTML', false, '<pre style="background:#222; color:#00ff41; padding:15px; border-radius:10px; font-family:monospace;">// مبرمج العاب العالمية هنا</pre><br>');
-            if(type === 'note') document.execCommand('insertHTML', false, '<div style="background:rgba(0,255,65,0.1); padding:15px; border-right:5px solid var(--primary); border-radius:5px;">💡 ملاحظة ذكية...</div><br>');
-            menu.style.display = 'none';
-        }
-
-        function exec(cmd) { document.execCommand(cmd, false, null); editor.focus(); }
-
-        function send() {
-            const i = document.getElementById('chat-input');
-            if(i.value) { db.ref('messages').push({ name: myName, text: i.value }); i.value = ""; }
-        }
-
-        function listen() {
-            db.ref('messages').limitToLast(30).on('child_added', (s) => {
-                const d = s.val();
-                const div = document.createElement('div');
-                div.className = "msg";
-                div.innerHTML = `<b>${d.name}</b> ${d.text}`;
-                document.getElementById('chat-messages').appendChild(div);
-                document.getElementById('chat-messages').scrollTop = 10000;
-            });
-        }
-        
-        function save() {
-            const blob = new Blob([editor.innerText], {type: "text/plain"});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-            a.download = "Hatim_Legendary_Work.txt"; a.click();
-        }
-
-        document.addEventListener('mousedown', (e) => { if(!menu.contains(e.target)) menu.style.display = 'none'; });
-    </script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/billing.js"></script>
 </body>
 </html>
+
