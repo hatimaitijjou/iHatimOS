@@ -21,7 +21,36 @@
     <option value="fr">FR</option>
   </select>
 </header>
+<button class="t-btn" onclick="askGemini()" style="background:#4285f4; color:white; border:none; display:flex; align-items:center; gap:5px;">
+    <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304731331201.svg" width="20">
+    اسأل Gemini
+</button>
 
+<script>
+// وظيفة فتح مساعد الذكاء الاصطناعي
+function askGemini() {
+    // سيفتح لك صفحة المساعد في نافذة منبثقة صغيرة
+    window.open('https://gemini.google.com/', 'GeminiAI', 'width=400,height=600');
+}
+
+// تعديل وظيفة الدخول لإضافة ترحيب Gemini
+function launch() {
+    const n = document.getElementById('user-name').value;
+    if(n && document.getElementById('pass').value === "1234") {
+        myName = n;
+        document.getElementById('login-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('login-screen').style.display = 'none';
+            // رسالة ترحيب مني في قاعدة البيانات ليراها الجميع
+            db.ref('messages').push({ 
+                name: "🤖 Gemini (AI)", 
+                text: "أهلاً بك يا " + myName + "! أنا هنا في Hatim Space لأساعدك أنت وفريقك. اضغط على زري الأزرق في الأعلى لأي استشارة!" 
+            });
+        }, 500);
+        listen();
+    }
+}
+</script>
 <main>
   <div id="editor" contenteditable="true">Write something…</div>
   <button onclick="aiRewrite()">✨ AI Rewrite</button>
