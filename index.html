@@ -1,78 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Hatim Space</title>
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="css/style.css">
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-functions-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hatim Space | AI Legendary Edition</title>
+    <style>
+        :root { --primary: #00ff41; --bg: #050505; --sidebar: #0a0a0a; --page: #ffffff; --text: #eee; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* شاشة الدخول */
+        #login-screen { position: fixed; inset: 0; background: radial-gradient(circle, #111 0%, #000 100%); z-index: 10000; display: flex; align-items: center; justify-content: center; transition: 0.5s; }
+        .login-card { background: rgba(15,15,15,0.9); padding: 50px; border-radius: 30px; border: 1px solid var(--primary); text-align: center; width: 350px; backdrop-filter: blur(20px); box-shadow: 0 0 50px rgba(0,255,65,0.1); }
+        .login-card input { width: 100%; padding: 15px; margin: 12px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: white; outline: none; }
+
+        /* شريط الأدوات */
+        .toolbar { background: var(--sidebar); padding: 12px 25px; display: flex; gap: 12px; border-bottom: 1px solid #222; align-items: center; justify-content: space-between; }
+        .t-btn { background: #151515; border: 1px solid #333; color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .gemini-btn { background: linear-gradient(45deg, #4285f4, #9b51e0); color: white; border: none; padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+
+        .main-container { flex: 1; display: flex; overflow: hidden; }
+
+        /* الشات والمحرر */
+        #chat-sidebar { width: 300px; background: var(--sidebar); border-left: 1px solid #222; display: flex; flex-direction: column; }
+        #chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { background: #151515; padding: 12px; border-radius: 12px; border-right: 4px solid var(--primary); font-size: 13px; }
+        .msg b { color: var(--primary); display: block; font-size: 10px; }
+
+        .workspace { flex: 1; padding: 30px; overflow-y: auto; background: #080808; display: flex; justify-content: center; position: relative; }
+        #editor { width: 100%; max-width: 800px; min-height: 1000px; background: var(--page); color: #1a1a1a; padding: 60px; outline: none; border-radius: 15px; font-size: 18px; line-height: 1.7; }
+        
+        /* قائمة السلاش */
+        #slash-menu { position: absolute; background: #0f0f0f; border: 1px solid var(--primary); border-radius: 12px; width: 220px; display: none; z-index: 1000; padding: 8px; }
+        .slash-item { padding: 10px; cursor: pointer; border-radius: 8px; font-size: 14px; color: white; }
+        .slash-item:hover { background: var(--primary); color: black; }
+    </style>
 </head>
-
 <body>
-<header>
-  <h1 id="title"></h1>
-  <select onchange="setLang(this.value)">
-    <option value="en">EN</option>
-    <option value="ar">AR</option>
-    <option value="fr">FR</option>
-  </select>
-</header>
-<button class="t-btn" onclick="askGemini()" style="background:#4285f4; color:white; border:none; display:flex; align-items:center; gap:5px;">
-    <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304731331201.svg" width="20">
-    اسأل Gemini
-</button>
 
-<script>
-// وظيفة فتح مساعد الذكاء الاصطناعي
-function askGemini() {
-    // سيفتح لك صفحة المساعد في نافذة منبثقة صغيرة
-    window.open('https://gemini.google.com/', 'GeminiAI', 'width=400,height=600');
-}
+    <div id="login-screen">
+        <div class="login-card">
+            <h1 style="color:var(--primary); margin:0;">HATIM SPACE</h1>
+            <p style="color:#555; margin-bottom:20px;">AI & KUL EDITION</p>
+            <input type="text" id="v-name" placeholder="اسمك">
+            <input type="password" id="v-pass" placeholder="كلمة السر (1234)">
+            <button class="t-btn" style="width:100%; background:var(--primary); color:black;" onclick="launch()">دخول</button>
+        </div>
+    </div>
 
-// تعديل وظيفة الدخول لإضافة ترحيب Gemini
-function launch() {
-    const n = document.getElementById('user-name').value;
-    if(n && document.getElementById('pass').value === "1234") {
-        myName = n;
-        document.getElementById('login-screen').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('login-screen').style.display = 'none';
-            // رسالة ترحيب مني في قاعدة البيانات ليراها الجميع
-            db.ref('messages').push({ 
-                name: "🤖 Gemini (AI)", 
-                text: "أهلاً بك يا " + myName + "! أنا هنا في Hatim Space لأساعدك أنت وفريقك. اضغط على زري الأزرق في الأعلى لأي استشارة!" 
+    <header class="toolbar">
+        <div style="display:flex; gap:10px;">
+            <button class="t-btn" onclick="exec('bold')">B</button>
+            <button class="t-btn" onclick="exec('italic')">I</button>
+        </div>
+        <button class="gemini-btn" onclick="window.open('https://gemini.google.com', '_blank')">✨ اسأل Gemini</button>
+    </header>
+
+    <div class="main-container">
+        <div class="workspace">
+            <div id="editor" contenteditable="true">
+                <h1>مرحبا بك في مساحتك الجديدة 🚀</h1>
+                <p>اكتب <b>/</b> للميزات السحرية...</p>
+            </div>
+            <div id="slash-menu">
+                <div class="slash-item" onclick="ins('h1')">📝 عنوان كبير</div>
+                <div class="slash-item" onclick="ins('todo')">✅ قائمة مهام</div>
+            </div>
+        </div>
+
+        <div id="chat-sidebar">
+            <div id="chat-messages"></div>
+            <div style="padding:15px; border-top:1px solid #222;">
+                <input type="text" id="c-input" placeholder="دردشة حية..." onkeypress="if(event.key==='Enter') send()" style="width:100%; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:8px;">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // دمج بيانات Firebase الحقيقية من صورتك
+        const firebaseConfig = {
+          apiKey: "AIzaSyBYW9x3xQvcZugc0mJx5iFbByPtGkXNx4M",
+          authDomain: "hatim-space-4f7e8.firebaseapp.com",
+          projectId: "hatim-space-4f7e8",
+          databaseURL: "https://hatim-space-4f7e8-default-rtdb.firebaseio.com",
+          storageBucket: "hatim-space-4f7e8.firebasestorage.app",
+          messagingSenderId: "1014020499692",
+          appId: "1:1014020499692:web:37e023621b0ff9ee59ddc9"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        let myName = "";
+
+        function launch() {
+            const n = document.getElementById('v-name').value;
+            if(n && document.getElementById('v-pass').value === "1234") {
+                myName = n;
+                document.getElementById('login-screen').style.display = 'none';
+                listen();
+                db.ref('messages').push({ name: "🤖 Gemini", text: "أهلاً بك يا " + myName + "! أنا هنا لمساعدتك." });
+            }
+        }
+
+        // كود السلاش والدردشة
+        const editor = document.getElementById('editor');
+        const menu = document.getElementById('slash-menu');
+
+        editor.addEventListener('keyup', (e) => {
+            const sel = window.getSelection();
+            if(sel.rangeCount > 0) {
+                const range = sel.getRangeAt(0);
+                if(range.startContainer.textContent.endsWith('/')) {
+                    const rect = range.getBoundingClientRect();
+                    menu.style.display = 'block';
+                    menu.style.top = (rect.bottom + window.scrollY - 80) + 'px';
+                    menu.style.left = rect.left + 'px';
+                } else { menu.style.display = 'none'; }
+            }
+        });
+
+        function ins(type) {
+            editor.focus(); document.execCommand('delete', false, null);
+            if(type === 'h1') document.execCommand('formatBlock', false, 'H1');
+            if(type === 'todo') document.execCommand('insertHTML', false, '<div><input type="checkbox"> مهمة...</div>');
+            menu.style.display = 'none';
+        }
+
+        function send() {
+            const i = document.getElementById('c-input');
+            if(i.value) { db.ref('messages').push({ name: myName, text: i.value }); i.value = ""; }
+        }
+
+        function listen() {
+            db.ref('messages').limitToLast(20).on('child_added', (s) => {
+                const d = s.val();
+                const div = document.createElement('div');
+                div.className = "msg";
+                div.innerHTML = `<b>${d.name}</b> ${d.text}`;
+                document.getElementById('chat-messages').appendChild(div);
+                document.getElementById('chat-messages').scrollTop = 10000;
             });
-        }, 500);
-        listen();
-    }
-}
-</script>
-<main>
-  <div id="editor" contenteditable="true">Write something…</div>
-  <button onclick="aiRewrite()">✨ AI Rewrite</button>
-
-  <div id="chat">
-    <div id="messages"></div>
-    <input id="msg" placeholder="Message…" onkeydown="if(event.key==='Enter')send()">
-    <button onclick="send()">Send</button>
-  </div>
-
-  <div>
-    <button onclick="subscribe('pro')">Subscribe Pro</button>
-    <button onclick="subscribe('team')">Subscribe Team</button>
-  </div>
-</main>
-
-<script src="js/i18n.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/editor.js"></script>
-<script src="js/chat.js"></script>
-<script src="js/ai.js"></script>
-<script src="js/billing.js"></script>
+        }
+    </script>
 </body>
 </html>
-
