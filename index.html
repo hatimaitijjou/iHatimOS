@@ -2,192 +2,162 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>HATIM SPACE OS | Ultimate 2026</title>
+<title>HATIM SPACE OS | برمجة حاتم آيت أجو</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --primary:#00ff41;
-  --secondary:#00d4ff;
-  --bg:#050505;
-  --panel:#111;
-  --text:#eee;
-  --glass:rgba(255,255,255,0.05);
+  --primary:#00ff41; --secondary:#00d4ff; --bg:#050505; --panel:#111; --text:#eee; --glass:rgba(255,255,255,0.05);
 }
 *{box-sizing:border-box;font-family:'Cairo',sans-serif;}
 body,html{margin:0;padding:0;height:100vh;overflow:hidden;color:var(--text);background:var(--bg);}
 
-/* نجوم */
+/* خلفية فضائية */
 #stars{position:fixed;inset:0;z-index:-1;background:#000;overflow:hidden;}
 .star{position:absolute;background:white;border-radius:50%;animation:twinkle 5s infinite;}
 @keyframes twinkle{0%,100%{opacity:0.3;}50%{opacity:1;}}
 
-/* Login */
-#login-screen{position:fixed;inset:0;z-index:9999;display:flex;justify-content:center;align-items:center;}
+/* شاشة الدخول */
+#login-screen{position:fixed;inset:0;z-index:9999;display:flex;justify-content:center;align-items:center;transition:0.5s;}
 .login-card{background:var(--glass);backdrop-filter:blur(25px);padding:60px;border-radius:40px;border:1px solid rgba(0,255,65,0.2);width:450px;text-align:center;box-shadow:0 0 100px rgba(0,255,65,0.2);}
 .dev-badge{color:var(--primary);font-weight:bold;letter-spacing:2px;margin-bottom:20px;display:block;}
 .main-logo{font-size:3.5rem;font-weight:900;background:linear-gradient(45deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:30px;}
-.login-card input{width:100%;padding:15px;margin-bottom:20px;background:#000;border:1px solid #333;color:white;border-radius:12px;transition:0.3s;}
-.login-card input:focus{border-color:var(--primary);outline:none;}
-.login-card button{width:100%;padding:18px;font-weight:900;color:black;background:var(--primary);border:none;border-radius:12px;cursor:pointer;transition:0.3s, transform 0.2s;}
-.login-card button:hover{background:var(--secondary);transform:scale(1.05);}
+.login-card input{width:100%;padding:15px;margin-bottom:20px;background:#000;border:1px solid #333;color:white;border-radius:12px;outline:none;}
+.login-card button{width:100%;padding:18px;font-weight:900;color:black;background:var(--primary);border:none;border-radius:12px;cursor:pointer;transition:0.3s;}
+.login-card button:hover{transform:scale(1.05);}
 
-/* App Interface */
+/* واجهة التطبيق */
 #app-interface{display:none;flex-direction:column;height:100vh;}
-.top-bar{background:var(--panel);padding:10px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #222;flex-wrap:wrap;gap:5px;}
-.top-bar .btn{margin-right:5px;transition:0.3s, box-shadow 0.3s;}
-.top-bar .btn:hover{background:var(--primary);color:black;transform:scale(1.05);font-weight:bold;box-shadow:0 0 20px var(--primary);}
-.workspace{display:flex;flex:1;overflow:hidden;position:relative;}
-.editor-side{flex:1;padding:40px;background:rgba(0,0,0,0.7);overflow-y:auto;position:relative;}
-#paper{width:100%;max-width:900px;min-height:1100px;margin:auto;padding:60px;border-radius:12px;background: rgba(255,255,255,0.95);box-shadow: inset 0 0 20px rgba(0,0,0,0.4);color:#111;font-size:18px;line-height:1.8;outline:none;transition:0.3s;}
-#paper:focus{box-shadow:0 0 40px var(--primary);}
-#slash-menu{position:absolute;width:260px;background:#111;border:1px solid var(--primary);border-radius:15px;padding:12px;display:none;z-index:1000;}
-.s-item{padding:12px;cursor:pointer;border-radius:10px;transition:0.2s;display:flex;align-items:center;gap:10px;font-size:14px;}
-.s-item:hover{background:var(--primary);color:black;font-weight:bold;transform:scale(1.02);}
+.top-bar{background:var(--panel);padding:10px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #222;gap:10px;}
+.btn{background:#222; border:1px solid #444; color:white; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:13px; transition:0.3s;}
+.btn:hover{background:var(--primary); color:black; transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,255,65,0.3);}
 
-/* AI Chat */
-.ai-chat-side{width:350px;background:var(--panel);border-right:1px solid #222;display:flex;flex-direction:column;}
-.ai-chat-side header{padding:15px;font-weight:bold;color:var(--primary);border-bottom:1px solid #222;}
-#chat-flow{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
-.bubble{padding:12px;border-radius:12px;max-width:85%;font-size:14px;line-height:1.5;opacity:0;animation:fadeMsg 0.5s forwards;}
-.bubble.user{background:#333;align-self:flex-end;color:white;}
-.bubble.ai{background:var(--primary);color:black;align-self:flex-start;font-weight:bold;text-shadow:0 0 5px white;}
-.ai-chat-side input{width:100%;padding:12px;background:#000;border:1px solid #333;border-radius:8px;color:white;transition:0.3s;}
-.ai-chat-side input:focus{border-color:var(--primary);outline:none;}
-.signature-footer{position:fixed;bottom:10px;left:20px;font-size:12px;color:#666;}
+.workspace{display:flex;flex:1;overflow:hidden;}
+.ai-chat-side{width:350px;background:var(--panel);border-left:1px solid #222;display:flex;flex-direction:column;}
+#chat-flow{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+.bubble{padding:12px;border-radius:12px;max-width:85%;font-size:14px;}
+.bubble.ai{background:var(--primary);color:black;align-self:flex-start;font-weight:bold;}
+.bubble.user{background:#333;color:white;align-self:flex-end;}
+
+.editor-side{flex:1;padding:40px;overflow-y:auto;background:rgba(0,0,0,0.5);position:relative;}
+#paper{width:100%;max-width:850px;min-height:1100px;margin:auto;padding:80px;background:white;color:#111;border-radius:8px;outline:none;font-size:18px;line-height:1.8;box-shadow:0 0 50px rgba(0,0,0,0.5);}
+
+/* قائمة السلاش */
+#slash-menu{position:absolute;width:240px;background:#1a1a1a;border:1px solid var(--primary);border-radius:12px;display:none;z-index:1000;padding:8px;}
+.s-item{padding:10px;cursor:pointer;color:white;border-radius:8px;font-size:14px;display:flex;align-items:center;gap:10px;}
+.s-item:hover{background:var(--primary);color:black;font-weight:bold;}
+
+.signature-footer{position:fixed;bottom:10px;left:20px;font-size:12px;color:#666;z-index:1000;}
 .signature-footer span{color:var(--primary);font-weight:bold;}
-@keyframes fadeMsg{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
 <div id="stars"></div>
 
-<!-- Login -->
+<!-- شاشة الدخول -->
 <div id="login-screen">
-<div class="login-card">
-<span class="dev-badge">برمج من طرف حاتم آيت أجو</span>
-<div class="main-logo">HATIM SPACE</div>
-<input type="text" id="captain-name" placeholder="اسم القائد...">
-<button onclick="playSound('click');launchOS()">تشغيل النظام الأسطوري 🚀</button>
-</div>
+  <div class="login-card">
+    <span class="dev-badge">برمج من طرف حاتم آيت أجو</span>
+    <div class="main-logo">HATIM SPACE</div>
+    <input type="text" id="captain-name" placeholder="اسم القائد الأسطوري...">
+    <button onclick="launchOS()">تشغيل النظام الأسطوري 🚀</button>
+  </div>
 </div>
 
-<!-- App Interface -->
+<!-- واجهة التطبيق -->
 <div id="app-interface">
 <header class="top-bar">
-<div style="font-weight:900;color:var(--primary);">HATIM SPACE OS | Ultimate</div>
-<div>
-<button class="btn" onclick="playSound('click');execCmd('bold')">B</button>
-<button class="btn" onclick="playSound('click');insTable()">📊 جدول</button>
-<button class="btn" onclick="playSound('click');insSlide()">🖼️ شريحة</button>
-<button class="btn" onclick="playSound('click');insToggle()">🗂️ Toggle List</button>
-<button class="btn" onclick="playSound('click');changeBG()">🌌 تغيير الخلفية</button>
-<button class="btn" onclick="playSound('click');uploadBG()">🖼️ رفع خلفية</button>
-<button class="btn" onclick="playSound('click');textColor()">🎨 لون النص</button>
-</div>
-<div style="color:#888;font-size:12px;">المبرمج: <span style="color:white;">حاتم آيت أجو</span></div>
+  <div style="font-weight:900;color:var(--primary);">HATIM SPACE OS | برمجة حاتم آيت أجو</div>
+  <div>
+    <button class="btn" onclick="execCmd('bold')">B</button>
+    <button class="btn" onclick="insTable()">📊 جدول</button>
+    <button class="btn" onclick="insSlide()">🖼️ شريحة</button>
+    <button class="btn" onclick="downloadHTML()">⬇️ تحميل</button>
+    <button class="btn" onclick="uploadBG()">🖼️ خلفية مخصصة</button>
+  </div>
+  <button class="btn" style="background:#ff4d4d;" onclick="location.reload()">خروج</button>
 </header>
 
 <div class="workspace">
-<div class="ai-chat-side">
-<header>🤖 HATIM AI ENGINE</header>
-<div id="chat-flow"></div>
-<div style="padding:15px;">
-<input type="text" id="ai-in" placeholder="دردش مع الذكاء..." onkeypress="if(event.key==='Enter'){playSound('msg');aiChat();}">
-</div>
-</div>
-<div class="editor-side">
-<div id="paper" contenteditable="true" spellcheck="false">
-<h1 style="text-align:center;">إبداع جديد بقلم حاتم ✍️</h1>
-<p>اكتب <b>/</b> لتشغيل ذكاء حاتم البرمجي أو أدوات Notion الذكية...</p>
-</div>
-<div id="slash-menu">
-<div class="s-item" onclick="playSound('click');aiWrite('story')">📖 تأليف قصة أسطورية</div>
-<div class="s-item" onclick="playSound('click');aiWrite('code')">💻 إنشاء كود برمجى</div>
-<div class="s-item" onclick="playSound('click');insTable()">📊 إدراج جدول بيانات</div>
-<div class="s-item" onclick="playSound('click');insToggle()">🗂️ Toggle List</div>
-</div>
-</div>
+  <!-- دردشة الذكاء -->
+  <div class="ai-chat-side">
+    <div style="padding:15px; border-bottom:1px solid #222; color:var(--primary); font-weight:bold;">🤖 HATIM AI ENGINE</div>
+    <div id="chat-flow"></div>
+    <div style="padding:15px;">
+      <input type="text" id="ai-in" placeholder="دردش مع الذكاء..." onkeypress="if(event.key==='Enter')aiChat()" style="width:100%; padding:10px; background:#000; color:white; border:1px solid #333; border-radius:8px;">
+    </div>
+  </div>
+
+  <!-- محرر النصوص -->
+  <div class="editor-side">
+    <div id="paper" contenteditable="true" spellcheck="false">
+      <h1 style="text-align:center;">إبداع جديد بقلم حاتم آيت أجو ✍️</h1>
+      <p>اكتب <b>/</b> لتشغيل القوى الخارقة للذكاء الاصطناعي...</p>
+    </div>
+    <div id="slash-menu">
+      <div class="s-item" onclick="aiWrite('story')">📖 AI: تأليف قصة أسطورية</div>
+      <div class="s-item" onclick="aiWrite('code')">💻 AI: إنشاء كود برمجى</div>
+      <div class="s-item" onclick="insTable()">📊 إدراج جدول بيانات</div>
+    </div>
+  </div>
 </div>
 </div>
 
 <div class="signature-footer">برمج من طرف <span>حاتم آيت أجو</span> | 2026</div>
 
 <script>
-// أصوات
-const sounds={
-  click:new Audio("https://www.soundjay.com/button/beep-07.wav"),
-  msg:new Audio("https://www.soundjay.com/button/beep-10.wav")
-};
-function playSound(name){if(sounds[name])sounds[name].play();}
-
-// نجوم متحركة
-for(let i=0;i<100;i++){
-  const s=document.createElement('div');
+// إنشاء النجوم
+for(let i=0;i<120;i++){
+  const s = document.createElement('div');
   s.className='star';
-  s.style.width=Math.random()*3+1+'px';
-  s.style.height=s.style.width;
+  const size=Math.random()*3+1+'px';
+  s.style.width=size;
+  s.style.height=size;
   s.style.top=Math.random()*100+'%';
   s.style.left=Math.random()*100+'%';
   document.getElementById('stars').appendChild(s);
 }
 
-// Launch OS
+// تشغيل النظام
 function launchOS(){
   const name=document.getElementById('captain-name').value.trim();
-  if(!name) return alert("يرجى إدخال اسمك!");
+  if(!name){alert("يرجى إدخال اسمك!"); return;}
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app-interface').style.display='flex';
 }
 
-// Editor & Slash Menu
-const paper=document.getElementById('paper');
-const sMenu=document.getElementById('slash-menu');
-paper.addEventListener('keyup',()=>{
-  const sel=window.getSelection();
-  if(sel.rangeCount>0 && sel.getRangeAt(0).startContainer.textContent.endsWith('/')){
-    const rect=sel.getRangeAt(0).getBoundingClientRect();
-    sMenu.style.display='block';
-    sMenu.style.top=(rect.bottom+window.scrollY+5)+'px';
-    sMenu.style.left=rect.left+'px';
-  } else sMenu.style.display='none';
-});
-
-// AI Chat
+// AI chat
 function aiChat(){
-  const i=document.getElementById('ai-in');
-  const f=document.getElementById('chat-flow');
-  if(!i.value) return;
-  const u=document.createElement('div'); u.className='bubble user'; u.innerText=i.value; f.appendChild(u);
-  f.scrollTop=f.scrollHeight;
+  const input=document.getElementById('ai-in');
+  if(!input.value) return;
+  const userBubble=document.createElement('div'); userBubble.className='bubble user'; userBubble.innerText=input.value;
+  document.getElementById('chat-flow').appendChild(userBubble);
+  input.value='';
   setTimeout(()=>{
-    const a=document.createElement('div'); a.className='bubble ai';
-    const responses=["أهلاً بك يا قائد! ما الذي تريد أن نبدعه اليوم؟",
-                     "سأكتب لك قصة أسطورية بأسلوب حاتم!",
-                     "دعنا نبرمج شيئاً خرافياً الآن…"];
-    a.innerText=responses[Math.floor(Math.random()*responses.length)];
-    f.appendChild(a);
-    f.scrollTop=f.scrollHeight;
-    playSound('msg');
+    const aiBubble=document.createElement('div'); aiBubble.className='bubble ai';
+    const responses=["مرحباً أيها القائد! ما الذي تريد أن نبدعه اليوم؟","سأكتب لك قصة أسطورية!","دعنا نبرمج شيئاً رائعاً الآن..."];
+    aiBubble.innerText=responses[Math.floor(Math.random()*responses.length)];
+    document.getElementById('chat-flow').appendChild(aiBubble);
+    document.getElementById('chat-flow').scrollTop=document.getElementById('chat-flow').scrollHeight;
   },700);
-  i.value='';
 }
 
-// Editor Commands
-function execCmd(cmd,val=null){ document.execCommand(cmd,false,val); }
-function aiWrite(t){
-  sMenu.style.display='none'; document.execCommand('delete');
-  const content=t==='story'?"في عالم يحكمه الكود، برز اسم حاتم كقائد للثورة التقنية...":"const hatimProject=()=>{console.log('Universal Success');}";
-  const span=document.createElement('span'); span.style.color='var(--primary)'; span.innerText=content;
-  paper.appendChild(span);
-  playSound('msg');
+// أوامر النص
+function execCmd(cmd,val=null){document.execCommand(cmd,false,val);}
+function aiWrite(type){
+  const content=type==='story'?"في عالم يحكمه الكود، برز اسم حاتم كقائد للثورة التقنية...":"console.log('مشروع عالمي!');";
+  document.getElementById('paper').innerHTML+=`<p style="color:var(--primary);">${content}</p>`;
 }
-function insTable(){ sMenu.style.display='none'; document.execCommand('insertHTML',`<table border="1" style="width:100%; border-collapse:collapse;"><tr><td>بيانات</td><td>قيم</td></tr></table>`); playSound('msg'); }
-function insSlide(){ document.execCommand('insertHTML',`<div style="background:#111;color:white;padding:40px;border-radius:15px;text-align:center;"><h2>شريحة أسطورية</h2></div>`); playSound('msg'); }
-function insToggle(){ document.execCommand('insertHTML',`<div style="padding:15px;border-left:4px solid var(--primary);margin:10px 0;"><b>Toggle:</b> محتوى قابل للطي هنا...</div>`); playSound('msg'); }
-function changeBG(){ const colors=['#050505','#1b1b2f','#0a0a1a','#110022','#001122','#111111']; document.getElementById('stars').style.background=colors[Math.floor(Math.random()*colors.length)]; }
-function uploadBG(){ const input=document.createElement('input'); input.type='file'; input.accept='image/*,video/*'; input.onchange=e=>{ const file=e.target.files[0]; const url=URL.createObjectURL(file); document.getElementById('stars').style.background=`url('${url}') center/cover no-repeat`; }; input.click(); }
-function textColor(){ const color=prompt('اختر لون النص (مثال: red أو #00ff00)'); if(color) execCmd('foreColor',color); playSound('msg'); }
+function insTable(){document.getElementById('paper').innerHTML+=`<table border="1" style="width:100%; border-collapse:collapse;"><tr><td>بيانات</td><td>قيم</td></tr></table>`;}
+function insSlide(){document.getElementById('paper').innerHTML+=`<div style="background:#111;color:white;padding:40px;border-radius:15px;text-align:center;"><h2>شريحة أسطورية</h2></div>`;}
+function uploadBG(){
+  const input=document.createElement('input'); input.type='file'; input.accept='image/*,video/*';
+  input.onchange=e=>{const url=URL.createObjectURL(e.target.files[0]); document.getElementById('stars').style.background=`url('${url}') center/cover no-repeat`;}
+  input.click();
+}
+function downloadHTML(){
+  const blob=new Blob([document.getElementById('paper').innerHTML],{type:'text/html'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hatim_space_content.html'; a.click();
+}
 </script>
 </body>
 </html>
-
