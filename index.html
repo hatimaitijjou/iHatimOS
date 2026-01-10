@@ -2,89 +2,296 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZENITH ∞ OS | The Ultimate Global System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ZENITH ∞ OS | The Ultimate Global OS</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;ZENITH ∞&quot;,&quot;short_name&quot;:&quot;ZENITH&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#000000&quot;,&quot;theme_color&quot;:&quot;#000000&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;https://cdn-icons-png.flaticon.com/512/3665/3665939.png&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/png&quot;}]}">
+
 <style>
 :root {
-    --primary: #00d2ff;
-    --secondary: #3a7bd5;
-    --accent: #f80759;
-    --glass-bg: rgba(20, 20, 30, 0.65);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-    --blur: blur(25px);
-    --font: 'Tajawal', sans-serif;
-    --shadow: 0 10px 40px rgba(0,0,0,0.5);
+    --primary:#00d2ff; --secondary:#3a7bd5; --accent:#f80759;
+    --glass-bg: rgba(20,20,30,0.65); --glass-border: 1px solid rgba(255,255,255,0.1);
+    --blur: blur(25px); --font:'Tajawal', sans-serif; --shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
-* { margin:0; padding:0; box-sizing:border-box; font-family:var(--font); user-select:none; }
-body { background:#000; color:#fff; height:100vh; overflow:hidden; }
+* { margin:0; padding:0; box-sizing:border-box; font-family:var(--font); user-select:none; -webkit-tap-highlight-color:transparent; }
+body { background:#000; height:100vh; overflow:hidden; color:#fff; }
+
+/* BACKGROUND */
 #wallpaper { position:fixed; inset:0; z-index:-1; background:url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072') center/cover; transition:0.5s; }
 #wallpaper::after { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.3); }
-#topbar { height:35px; background:rgba(0,0,0,0.3); backdrop-filter:blur(10px); display:flex; justify-content:space-between; align-items:center; padding:0 20px; font-size:0.85rem; font-weight:bold; border-bottom:var(--glass-border); }
+
+/* TOPBAR */
+#topbar { height:35px; background: rgba(0,0,0,0.3); backdrop-filter:blur(10px); display:flex; justify-content:space-between; align-items:center; padding:0 20px; font-size:0.85rem; font-weight:bold; z-index:5000; border-bottom:var(--glass-border); }
+
+/* DESKTOP */
 #desktop { position:absolute; inset:0; top:35px; bottom:80px; padding:20px; display:flex; gap:20px; }
 .icon-grid { display:flex; flex-direction:column; flex-wrap:wrap; gap:15px; height:100%; align-content:flex-start; }
 .app-icon { width:85px; display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:0.2s; text-shadow:0 2px 4px black; border-radius:10px; padding:5px; }
 .app-icon:hover { background: rgba(255,255,255,0.1); backdrop-filter:blur(5px); }
-.icon-box { width:60px; height:60px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:2rem; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.01)); border: var(--glass-border); box-shadow:0 5px 15px rgba(0,0,0,0.3); margin-bottom:5px; }
+.icon-box { width:60px; height:60px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:2rem; background:linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.01)); border:var(--glass-border); box-shadow:0 5px 15px rgba(0,0,0,0.3); margin-bottom:5px; }
+
+/* WIDGETS */
 .widget-area { margin-right:auto; width:300px; display:flex; flex-direction:column; gap:15px; }
 .widget { background:var(--glass-bg); backdrop-filter:var(--blur); border-radius:20px; padding:20px; border:var(--glass-border); box-shadow:var(--shadow); transition:0.3s; }
 .widget:hover { transform:scale(1.02); }
+
+/* DOCK */
 #dock-container { position:fixed; bottom:15px; left:0; right:0; display:flex; justify-content:center; z-index:9000; }
 #dock { background: rgba(20,20,30,0.75); backdrop-filter:blur(30px); padding:10px 20px; border-radius:24px; border:var(--glass-border); display:flex; gap:15px; align-items:flex-end; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
-.dock-item { width:50px; height:50px; border-radius:14px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer; transition:0.2s cubic-bezier(0.25,1,0.5,1); position:relative; border-bottom:2px solid transparent; }
+.dock-item { width:50px; height:50px; border-radius:14px; background: rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer; transition:0.2s cubic-bezier(0.25,1,0.5,1); position:relative; border-bottom:2px solid transparent; }
 .dock-item:hover { transform:translateY(-15px) scale(1.2); background: rgba(255,255,255,0.2); margin:0 10px; }
 .dock-item.active::after { content:''; position:absolute; bottom:-5px; width:5px; height:5px; background:var(--primary); border-radius:50%; }
+
+/* WINDOWS */
 .window { position:absolute; background:#121212; border-radius:12px; border:1px solid #333; display:flex; flex-direction:column; box-shadow:0 30px 60px rgba(0,0,0,0.7); min-width:350px; min-height:250px; overflow:hidden; animation:popIn 0.3s cubic-bezier(0.1,0.9,0.2,1); resize:both; }
 @keyframes popIn { from{opacity:0; transform:scale(0.9);} to{opacity:1; transform:scale(1);} }
 .win-head { height:40px; background:#1c1c24; display:flex; justify-content:space-between; align-items:center; padding:0 15px; cursor:grab; border-bottom:1px solid #333; }
 .win-controls { display:flex; gap:8px; }
 .win-dot { width:12px; height:12px; border-radius:50%; cursor:pointer; transition:0.2s; }
 .close { background:#ff5f57; } .close:hover { filter:brightness(0.8); }
-.min { background:#febc2e; }
-.max { background:#28c840; }
+.min { background:#febc2e; } .max { background:#28c840; }
 .win-body { flex:1; position:relative; overflow:hidden; background:#0e0e12; }
-#start-menu { position:fixed; bottom:85px; left:50%; transform:translateX(-50%) translateY(20px); width:320px; background:rgba(20,20,30,0.95); backdrop-filter:blur(40px); border:var(--glass-border); border-radius:20px; padding:20px; display:none; flex-direction:column; gap:15px; opacity:0; transition:0.3s; z-index:8999; }
+
+/* START MENU */
+#start-menu { position:fixed; bottom:85px; left:50%; transform:translateX(-50%) translateY(20px); width:320px; background: rgba(20,20,30,0.95); backdrop-filter:blur(40px); border:var(--glass-border); border-radius:20px; padding:20px; display:none; flex-direction:column; gap:15px; opacity:0; transition:0.3s; z-index:8999; }
 #start-menu.show { display:flex; transform:translateX(-50%) translateY(0); opacity:1; }
 .start-item { display:flex; align-items:center; gap:15px; padding:10px; border-radius:10px; cursor:pointer; transition:0.2s; }
 .start-item:hover { background: rgba(255,255,255,0.1); }
+
+/* TOAST */
 #toast { position:fixed; top:50px; right:20px; background: rgba(20,20,30,0.9); border-left:4px solid var(--primary); padding:15px; border-radius:8px; transform:translateX(150%); transition:0.5s; z-index:9999; }
+
+/* APP SPECIFIC */
+.browser-bar { display:flex; gap:10px; padding:8px; background:#222; }
+.url-in { flex:1; background:#111; border:none; color:white; padding:5px 10px; border-radius:5px; }
+.paint-tools { padding:10px; background:#222; display:flex; gap:10px; justify-content:center; }
+.color-dot { width:20px; height:20px; border-radius:50%; cursor:pointer; border:2px solid #555; }
+.color-dot.active { border-color:white; transform:scale(1.2); }
+.term-box { background:#0c0c0c; color:#0f0; padding:15px; font-family:monospace; height:100%; overflow-y:auto; }
+.term-in { background:transparent; border:none; color:#0f0; outline:none; width:100%; font-family:monospace; }
 </style>
 </head>
 <body>
 <div id="wallpaper"></div>
-<div id="topbar"><div style="display:flex;gap:15px;align-items:center;"><i class="fab fa-battle-net" style="font-size:1.2rem;color:var(--primary);"></i><span id="os-title">ZENITH ∞ OS</span></div><div style="display:flex;gap:15px;align-items:center;"><i class="fas fa-wifi"></i><i class="fas fa-battery-full"></i><span id="clock">12:00</span></div></div>
-<div id="desktop"><div class="icon-grid" id="icons"></div><div class="widget-area"><div class="widget" style="background: linear-gradient(135deg, #FF9D6C, #BB4E75);"><h3><i class="fas fa-sun"></i> الطقس</h3><h1 style="font-size:3rem;margin:10px 0;" id="weather-temp">24°</h1><p id="weather-desc">مشمس، سماء صافية</p></div><div class="widget"><h3 style="color:var(--primary)">حالة النظام</h3><div style="margin-top:10px;height:5px;background:#333;border-radius:5px;overflow:hidden;"><div style="width:45%;height:100%;background:var(--primary);"></div></div><div style="font-size:0.8rem;margin-top:5px;display:flex;justify-content:space-between;"><span>CPU: 45%</span><span>RAM: 3.2GB</span></div></div></div></div>
+
+<!-- Top Bar -->
+<div id="topbar">
+<div style="display:flex; gap:15px; align-items:center;">
+<i class="fab fa-battle-net" style="font-size:1.2rem; color:var(--primary);"></i>
+<span>ZENITH ∞ ULTRA</span>
+</div>
+<div style="display:flex; gap:15px; align-items:center;">
+<i class="fas fa-wifi"></i>
+<i class="fas fa-battery-full"></i>
+<span id="clock">12:00</span>
+</div>
+</div>
+
+<!-- Desktop -->
+<div id="desktop">
+<div class="icon-grid" id="icons"></div>
+<div class="widget-area">
+<div class="widget" style="background: linear-gradient(135deg, #FF9D6C, #BB4E75);">
+<h3><i class="fas fa-sun"></i> الطقس</h3>
+<h1 style="font-size:3rem; margin:10px 0;">24°</h1>
+<p>مشمس، سماء صافية</p>
+</div>
+<div class="widget">
+<h3 style="color:var(--primary)">حالة النظام</h3>
+<div style="margin-top:10px; height:5px; background:#333; border-radius:5px; overflow:hidden;">
+<div style="width:45%; height:100%; background:var(--primary);"></div>
+</div>
+<div style="font-size:0.8rem; margin-top:5px; display:flex; justify-content:space-between;">
+<span>CPU: 45%</span> <span>RAM: 3.2GB</span>
+</div>
+</div>
+<div class="widget" style="background: #222;">
+<h3 style="color:#00e676;">ZENITH AI Assistant</h3>
+<p id="ai-response" style="color:#fff;">مرحباً! اطلب أي شيء...</p>
+<input id="ai-input" placeholder="اكتب هنا..." style="width:100%; padding:5px; border:none; border-radius:5px; outline:none; margin-top:5px; background:#111; color:#fff;" onkeypress="if(event.key==='Enter') runAI()">
+</div>
+</div>
+</div>
+
+<!-- Windows Layer -->
 <div id="win-layer"></div>
-<div id="start-menu"><div style="font-weight:bold;color:#aaa;margin-bottom:5px;" id="start-title">التطبيقات</div><div id="start-list"></div><div style="margin-top:10px;border-top:1px solid #444;padding-top:10px;display:flex;justify-content:space-between;align-items:center;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:30px;height:30px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:black;">H</div><span id="user-name">القائد حاتم</span></div><i class="fas fa-power-off" onclick="location.reload()" style="cursor:pointer;color:#ff5f57;"></i></div></div>
-<div id="dock-container"><div id="dock"><div class="dock-item" onclick="toggleStart()"><i class="fas fa-th" style="color:#fff;"></i></div><div style="width:1px;height:30px;background:rgba(255,255,255,0.2);margin:0 5px;"></div><div id="dock-apps" style="display:flex;gap:15px;"></div></div></div>
+
+<!-- Start Menu -->
+<div id="start-menu">
+<div style="font-weight:bold; color:#aaa; margin-bottom:5px;">التطبيقات</div>
+<div id="start-list"></div>
+<div style="margin-top:10px; border-top:1px solid #444; padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
+<div style="display:flex; align-items:center; gap:10px;">
+<div style="width:30px; height:30px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; color:black;">H</div>
+<span>القائد حاتم</span>
+</div>
+<i class="fas fa-power-off" onclick="location.reload()" style="cursor:pointer; color:#ff5f57;"></i>
+</div>
+</div>
+
+<!-- Dock -->
+<div id="dock-container">
+<div id="dock">
+<div class="dock-item" onclick="toggleStart()"><i class="fas fa-th" style="color:#fff;"></i></div>
+<div style="width:1px; height:30px; background:rgba(255,255,255,0.2); margin:0 5px;"></div>
+<div id="dock-apps" style="display:flex; gap:15px;"></div>
+</div>
+</div>
+
+<!-- Toast -->
 <div id="toast">مرحباً بك في ZENITH ∞ OS</div>
+
 <script>
 const System = {
 zIndex:100,
-language:'ar',
 apps:{
-    'files':{name:{ar:'الملفات',en:'Files'},icon:'fas fa-folder',color:'#ffca28',type:'files'},
-    'browser':{name:{ar:'المتصفح',en:'Browser'},icon:'fas fa-globe',color:'#00d2ff',type:'web',url:'https://bing.com'},
-    'store':{name:{ar:'المتجر',en:'Store'},icon:'fas fa-store',color:'#f50057',type:'store'},
-    'term':{name:{ar:'Terminal',en:'Terminal'},icon:'fas fa-terminal',color:'#00e676',type:'term'},
-    'paint':{name:{ar:'الرسام',en:'Paint'},icon:'fas fa-palette',color:'#d500f9',type:'paint'},
-    'media':{name:{ar:'ميديا',en:'Media'},icon:'fas fa-play-circle',color:'#ff3d00',type:'iframe',url:'https://www.youtube.com/embed/jfKfPfyJRdk'},
-    'notes':{name:{ar:'الملاحظات',en:'Notes'},icon:'fas fa-sticky-note',color:'#ffea00',type:'notes'},
-    'ai':{name:{ar:'AI مساعد',en:'AI Assistant'},icon:'fas fa-robot',color:'#00ffd5',type:'ai'},
-    'settings':{name:{ar:'الإعدادات',en:'Settings'},icon:'fas fa-cog',color:'#b0bec5',type:'settings'}
+'files':{name:'الملفات',icon:'fas fa-folder',color:'#ffca28',type:'files'},
+'browser':{name:'المتصفح',icon:'fas fa-globe',color:'#00d2ff',type:'web',url:'https://bing.com'},
+'store':{name:'المتجر',icon:'fas fa-store',color:'#f50057',type:'store'},
+'term':{name:'Terminal',icon:'fas fa-terminal',color:'#00e676',type:'term'},
+'paint':{name:'الرسام',icon:'fas fa-palette',color:'#d500f9',type:'paint'},
+'media':{name:'ميديا',icon:'fas fa-play-circle',color:'#ff3d00',type:'iframe',url:'https://www.youtube.com/embed/jfKfPfyJRdk'},
+'notes':{name:'الملاحظات',icon:'fas fa-sticky-note',color:'#ffea00',type:'notes'},
+'settings':{name:'الإعدادات',icon:'fas fa-cog',color:'#b0bec5',type:'settings'},
+'ai':{name:'ZENITH AI',icon:'fas fa-robot',color:'#00e676',type:'ai'}
 },
-init:function(){this.renderUI();this.startTime();this.showToast('تم تحميل النظام بنجاح 🚀');},
-renderUI:function(){const icons=document.getElementById('icons');const dock=document.getElementById('dock-apps');const start=document.getElementById('start-list');Object.keys(this.apps).forEach(key=>{const app=this.apps[key];
-let appName=app.name[this.language];
-icons.innerHTML+=`<div class="app-icon" onclick="WindowManager.open('${key}')"><div class="icon-box"><i class="${app.icon}" style="color:${app.color}"></i></div><span>${appName}</span></div>`;
-if(['files','browser','store','term','paint'].includes(key)) dock.innerHTML+=`<div class="dock-item" id="dock-${key}" onclick="WindowManager.open('${key}')"><i class="${app.icon}" style="color:${app.color}"></i></div>`;
-start.innerHTML+=`<div class="start-item" onclick="WindowManager.open('${key}'); toggleStart()"><i class="${app.icon}" style="color:${app.color}; width:25px;"></i><span>${appName}</span></div>`;});},
-startTime:function(){setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});},1000);},
-showToast:function(msg){const t=document.getElementById('toast');t.innerText=msg;t.style.transform='translateX(0)';setTimeout(()=>t.style.transform='translateX(150%)',3000);}
+
+init:function(){
+this.renderUI();
+this.startTime();
+this.showToast('تم تحميل النظام بنجاح 🚀');
+},
+
+renderUI:function(){
+const icons=document.getElementById('icons');
+const dock=document.getElementById('dock-apps');
+const start=document.getElementById('start-list');
+Object.keys(this.apps).forEach(key=>{
+const app=this.apps[key];
+icons.innerHTML+=`
+<div class="app-icon" onclick="WindowManager.open('${key}')">
+<div class="icon-box"><i class="${app.icon}" style="color:${app.color}"></i></div>
+<span>${app.name}</span>
+</div>`;
+if(['files','browser','store','term','paint'].includes(key)){
+dock.innerHTML+=`<div class="dock-item" id="dock-${key}" onclick="WindowManager.open('${key}')"><i class="${app.icon}" style="color:${app.color}"></i></div>`;
+}
+start.innerHTML+=`<div class="start-item" onclick="WindowManager.open('${key}'); toggleStart()"><i class="${app.icon}" style="color:${app.color}; width:25px;"></i><span>${app.name}</span></div>`;
+});
+},
+
+startTime:function(){
+setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});},1000);
+},
+
+showToast:function(msg){
+const t=document.getElementById('toast');
+t.innerText=msg;
+t.style.transform='translateX(0)';
+setTimeout(()=>t.style.transform='translateX(150%)',3000);
+}
 };
-function toggleStart(){const m=document.getElementById('start-menu');m.classList.toggle('show');}
-document.addEventListener('click',(e)=>{const m=document.getElementById('start-menu');const dock=document.getElementById('dock');if(m.classList.contains('show')&&!m.contains(e.target)&&!dock.contains(e.target)){m.classList.remove('show');}});
+
+// WINDOW MANAGER
+const WindowManager={
+open:function(key){
+const app=System.apps[key];
+if(app.type==='ai'){document.getElementById('ai-input').focus(); return;}
+const wid='win-'+Date.now();
+const win=document.createElement('div');
+win.className='window'; win.id=wid; win.style.zIndex=++System.zIndex;
+win.style.left=(50+Math.random()*50)+'px'; win.style.top=(50+Math.random()*50)+'px';
+win.style.width='700px'; win.style.height='500px';
+win.innerHTML=`<div class="win-head" onmousedown="WindowManager.drag(event,'${wid}')">
+<div class="win-controls">
+<div class="win-dot close" onclick="WindowManager.close('${wid}')"></div>
+<div class="win-dot min" onclick="document.getElementById('${wid}').style.display='none'"></div>
+<div class="win-dot max" onclick="WindowManager.max('${wid}')"></div>
+</div>
+<div style="font-weight:500;">${app.name}</div>
+<div style="width:50px;"></div>
+</div>
+<div class="win-body">${this.getContent(app,wid)}</div>`;
+win.onmousedown=()=>win.style.zIndex=++System.zIndex;
+document.getElementById('win-layer').appendChild(win);
+
+const di=document.getElementById('dock-'+key);
+if(di){di.classList.add('active'); di.style.transform='translateY(-10px)'; setTimeout(()=>di.style.transform='translateY(0)',300);}
+if(app.type==='paint') this.initPaint(wid);
+if(app.type==='term') this.initTerm(wid);
+},
+
+close:function(wid){document.getElementById(wid).remove();},
+max:function(wid){
+const w=document.getElementById(wid);
+if(w.style.width==='100%'){w.style.width='700px'; w.style.height='500px'; w.style.top='50px'; w.style.left='50px'; w.style.borderRadius='12px';}
+else{w.style.width='100%'; w.style.height='calc(100% - 35px)'; w.style.top='35px'; w.style.left='0'; w.style.borderRadius='0';}
+},
+drag:function(e,wid){
+const w=document.getElementById(wid);
+const dx=e.clientX-w.offsetLeft; const dy=e.clientY-w.offsetTop;
+const mv=(ev)=>{w.style.left=(ev.clientX-dx)+'px'; w.style.top=(ev.clientY-dy)+'px';};
+document.addEventListener('mousemove',mv);
+document.onmouseup=()=>document.removeEventListener('mousemove',mv);
+},
+
+getContent:function(app,wid){
+if(app.type==='web') return `<div style="width:100%;height:100%;"><iframe src="${app.url}" style="width:100%;height:100%;border:none;"></iframe></div>`;
+if(app.type==='iframe') return `<iframe src="${app.url}" style="width:100%;height:100%;border:none;"></iframe>`;
+if(app.type==='notes') return `<textarea style="width:100%;height:100%;background:#111;color:#fff;border:none;padding:10px;font-size:1rem;"></textarea>`;
+if(app.type==='settings') return `<div style="padding:20px;">🛠️ إعدادات متقدمة قادمة قريباً</div>`;
+if(app.type==='files') return `<div style="padding:20px;">📂 مدير الملفات عالمي - قادم مع دعم سحابي</div>`;
+return `<div style="padding:20px;">مرحبا بك في ${app.name}</div>`;
+},
+
+initPaint:function(wid){
+const w=document.getElementById(wid);
+w.querySelector('.win-body').innerHTML=`<canvas id="paint-canvas-${wid}" style="background:#111;width:100%;height:100%;display:block;cursor:crosshair;"></canvas>`;
+const canvas=document.getElementById(`paint-canvas-${wid}`);
+const ctx=canvas.getContext('2d'); canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight;
+let painting=false; canvas.onmousedown=()=>painting=true; canvas.onmouseup=()=>painting=false;
+canvas.onmousemove=(e)=>{if(!painting)return; ctx.fillStyle='white'; ctx.beginPath(); ctx.arc(e.offsetX,e.offsetY,3,0,Math.PI*2); ctx.fill();}
+},
+
+initTerm:function(wid){
+const w=document.getElementById(wid);
+w.querySelector('.win-body').innerHTML=`<div class="term-box" id="term-${wid}"></div><input class="term-in" id="term-in-${wid}" onkeypress="if(event.key==='Enter') runTerm('${wid}')">`;
+}
+};
+
+// START MENU
+function toggleStart(){
+const sm=document.getElementById('start-menu');
+sm.classList.toggle('show');
+}
+
+// AI
+function runAI(){
+const input=document.getElementById('ai-input'); const out=document.getElementById('ai-response');
+const val=input.value.trim(); if(!val) return; input.value='';
+out.innerHTML='... جاري التحليل';
+setTimeout(()=>{out.innerHTML=`💡 ZENITH AI: "${val}" تم فهم طلبك و تنفيذه تقريبا!`;},1200);
+}
+
+// TERMINAL
+function runTerm(wid){
+const tbox=document.getElementById('term-'+wid);
+const tin=document.getElementById('term-in-'+wid);
+const cmd=tin.value.trim(); tin.value='';
+if(!cmd)return;
+let res='';
+if(cmd==='help') res='Available commands: help, date, echo, clear';
+else if(cmd==='date') res=new Date();
+else if(cmd.startsWith('echo ')) res=cmd.slice(5);
+else if(cmd==='clear'){tbox.innerHTML=''; return;} 
+else res='Command not found!';
+tbox.innerHTML+=`<div>> ${cmd}</div><div>${res}</div>`; tbox.scrollTop=tbox.scrollHeight;
+}
+
+// INIT SYSTEM
 System.init();
 </script>
 </body>
