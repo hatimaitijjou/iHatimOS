@@ -1,127 +1,110 @@
 const HOS = {
     z: 100,
-    password: "1234",
-    apps: {},
-    installed: JSON.parse(localStorage.getItem('installed_apps')) || ['Browser', 'Notes', 'Calculator'],
-
+    password: localStorage.getItem('hos_pass'),
+    
     boot() {
-        this.createStars();
-        this.timer();
-        setInterval(() => this.timer(), 1000);
-        this.initApps();
+        this.updateTime();
+        setInterval(() => this.updateTime(), 1000);
         this.renderDesktop();
-        this.loadStore();
-    },
 
-    timer() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById("lock-clock").innerText = timeStr;
-        document.getElementById("mini-clock").innerText = timeStr;
-    },
-
-    checkPassword() {
-        const val = document.getElementById("pass-field").value;
-        const screen = document.getElementById("lock-screen");
-        if (val === this.password) {
-            screen.style.transform = "scale(1.2)";
-            screen.style.opacity = "0";
-            setTimeout(() => screen.style.display = "none", 800);
+        if (!this.password) {
+            document.getElementById('setup-area').style.display = "block";
         } else {
-            document.getElementById("error-msg").innerText = "خطأ في كلمة المرور!";
-            document.getElementById("pass-field").value = "";
+            document.getElementById('login-area').style.display = "block";
         }
     },
 
-    createStars() {
-        const container = document.getElementById("stars-container");
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement("div");
-            star.className = "star";
-            const size = Math.random() * 3 + "px";
-            star.style.width = star.style.height = size;
-            star.style.left = Math.random() * 100 + "vw";
-            star.style.top = Math.random() * 100 + "vh";
-            container.appendChild(star);
-        }
+    updateTime() {
+        const t = new Date().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
+        document.getElementById('lock-clock').innerText = t;
+        document.getElementById('mini-clock').innerText = t;
     },
 
-    initApps() {
-        this.apps = {
-            "Browser": { name: "المتصفح", icon: "fa-globe", color: "#4285f4", content: `<iframe src="https://www.bing.com" style="width:100%;height:100%;border:none;background:white;"></iframe>` },
-            "Notes": { name: "المفكرة", icon: "fa-edit", color: "#fbbc05", content: `<textarea style="width:100%;height:100%;background:transparent;color:white;border:none;padding:15px;outline:none;" placeholder="اكتب هنا..."></textarea>` },
-            "Calculator": { name: "الحاسبة", icon: "fa-calculator", color: "#34a853", content: `<div style="padding:20px;text-align:center;">جاري تطوير الحاسبة المتطورة...</div>` },
-            "Snake": { name: "الثعبان", icon: "fa-vial", color: "#ea4335", content: `<div style="padding:20px;text-align:center;">اللعبة قيد التحميل...</div>` }
-        };
+    saveFirstPass() {
+        const p = document.getElementById('new-pass').value;
+        if(p.length < 1) return;
+        localStorage.setItem('hos_pass', p);
+        location.reload();
+    },
+
+    checkPass() {
+        const p = document.getElementById('pass-field').value;
+        if(p === this.password) {
+            document.getElementById('lock-screen').style.transform = "translateY(-100%)";
+        } else {
+            document.getElementById('error-msg').innerText = "خطأ!";
+        }
     },
 
     renderDesktop() {
-        const desk = document.getElementById("desktop");
-        desk.innerHTML = "";
-        this.installed.forEach(id => {
-            const app = this.apps[id];
-            const div = document.createElement("div");
-            div.className = "icon";
-            div.innerHTML = `<i class="fas ${app.icon}" style="color:${app.color}"></i><span>${app.name}</span>`;
-            div.onclick = () => this.openApp(id);
-            desk.appendChild(div);
+        const apps = [
+            { id: 'Settings', name: 'الإعدادات', icon: 'fa-cog', color: '#888' },
+            { id: 'Notes', name: 'الملاحظات', icon: 'fa-sticky-note', color: '#ffcc00' }
+        ];
+        const grid = document.getElementById('icons-grid');
+        grid.innerHTML = "";
+        apps.forEach(app => {
+            grid.innerHTML += `
+                <div class="icon" onclick="HOS.openApp('${app.id}')">
+                    <i class="fas ${app.icon}" style="color:${app.color}"></i>
+                    <span>${app.name}</span>
+                </div>`;
         });
     },
 
     openApp(id) {
-        if (document.getElementById("win-" + id)) return;
-        const app = this.apps[id];
-        const win = document.createElement("div");
+        if(document.getElementById('win-'+id)) return;
+        const win = document.createElement('div');
         win.className = "window";
-        win.id = "win-" + id;
+        win.id = 'win-'+id;
         win.style.zIndex = ++this.z;
         win.style.top = "100px"; win.style.left = "100px";
         
+        let content = id === 'Settings' ? this.getSettingsUI() : "محتوى التطبيق قيد التطوير";
+
         win.innerHTML = `
-            <div class="bar">
-                <span><i class="fas ${app.icon}"></i> ${app.name}</span>
-                <span class="close-btn" onclick="this.closest('.window').remove()">×</span>
+            <div class="bar" onmousedown="HOS.drag(event, this)">
+                <span>${id}</span>
+                <span onclick="this.closest('.window').remove()" style="cursor:pointer">×</span>
             </div>
-            <div style="flex:1; overflow:hidden;">${app.content}</div>
-        `;
-        document.body.appendChild(win);
-        this.makeDraggable(win);
+            <div class="body">${content}</div>`;
+        document.getElementById('windows-container').appendChild(win);
     },
 
-    makeDraggable(win) {
-        const bar = win.querySelector(".bar");
-        bar.onmousedown = (e) => {
-            let ox = e.clientX - win.offsetLeft;
-            let oy = e.clientY - win.offsetTop;
-            document.onmousemove = (ev) => {
-                win.style.left = ev.clientX - ox + "px";
-                win.style.top = ev.clientY - oy + "px";
-            };
-            document.onmouseup = () => document.onmousemove = null;
-        };
+    getSettingsUI() {
+        return `
+            <div style="text-align:right">
+                <label>تغيير كلمة المرور:</label>
+                <input type="password" id="change-pass-inp" style="width:100%;margin:10px 0;">
+                <button class="set-btn" onclick="HOS.updatePass()">حفظ الكلمة الجديدة</button>
+                <hr style="margin:20px 0; border:0; border-top:1px solid #444;">
+                <button class="set-btn danger" onclick="HOS.factoryReset()">إعادة ضبط المصنع (مسح كل شيء)</button>
+            </div>`;
     },
 
-    toggleStore(show) {
-        document.getElementById("app-store").style.display = show ? "block" : "none";
-    },
-
-    loadStore() {
-        const grid = document.getElementById("store-items");
-        grid.innerHTML = "";
-        Object.keys(this.apps).forEach(id => {
-            const card = document.createElement("div");
-            card.className = "store-card"; // أضف تنسيقها في CSS
-            card.innerHTML = `<h4>${this.apps[id].name}</h4><button onclick="HOS.install('${id}')">تثبيت</button>`;
-            grid.appendChild(card);
-        });
-    },
-
-    install(id) {
-        if (!this.installed.includes(id)) {
-            this.installed.push(id);
-            localStorage.setItem('installed_apps', JSON.stringify(this.installed));
-            this.renderDesktop();
-            alert("تم التثبيت بنجاح!");
+    updatePass() {
+        const newP = document.getElementById('change-pass-inp').value;
+        if(newP) {
+            localStorage.setItem('hos_pass', newP);
+            alert("تم تحديث كلمة المرور!");
         }
+    },
+
+    factoryReset() {
+        if(confirm("هل أنت متأكد؟ سيتم مسح كلمة المرور وجميع البيانات!")) {
+            localStorage.clear();
+            location.reload();
+        }
+    },
+
+    drag(e, bar) {
+        const win = bar.parentElement;
+        let ox = e.clientX - win.offsetLeft;
+        let oy = e.clientY - win.offsetTop;
+        document.onmousemove = (ev) => {
+            win.style.left = ev.clientX - ox + "px";
+            win.style.top = ev.clientY - oy + "px";
+        };
+        document.onmouseup = () => document.onmousemove = null;
     }
 };
