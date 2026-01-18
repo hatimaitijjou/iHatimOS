@@ -1,284 +1,175 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="hatim-os-root">
+<html lang="ar" dir="rtl" id="hatim-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hatim OS Infinity - Ultra Millennium Edition</title>
+    <title>Hatim OS Infinity - Stable Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <style>
-        /* --- التصميم المستقبلي (GX Gaming Style) --- */
         :root {
-            --accent: #ff0055; /* نيون أحمر للـ Gaming */
-            --bg-dark: #050505;
-            --glass: rgba(10, 10, 10, 0.85);
-            --border: rgba(255, 0, 85, 0.2);
-            --text: #ffffff;
-            --shadow: 0 0 30px rgba(255, 0, 85, 0.3);
+            --accent: #ff0055; --bg: #0a0a0a; --glass: rgba(20, 20, 20, 0.9);
+            --border: rgba(255, 255, 255, 0.1);
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body, html { height: 100%; width: 100%; overflow: hidden; background: var(--bg); color: white; font-family: sans-serif; }
 
-        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        body, html { 
-            margin: 0; padding: 0; height: 100%; width: 100%; 
-            overflow: hidden; background: var(--bg-dark); 
-            color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        /* شاشة القفل المرعبة */
+        /* شاشة القفل */
         #lock-screen {
-            position: fixed; inset: 0; z-index: 10000;
-            background: radial-gradient(circle at center, #1a0008, #000);
+            position: fixed; inset: 0; z-index: 9999;
+            background: radial-gradient(circle, #222, #000);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+        .lock-box { background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid var(--border); text-align: center; width: 300px; }
 
-        #lock-timer { font-size: 120px; font-weight: 100; text-shadow: var(--shadow); margin: 0; }
-        .auth-card {
-            background: var(--glass); border: 1px solid var(--border);
-            padding: 40px; border-radius: 30px; backdrop-filter: blur(20px);
-            text-align: center; width: 350px; box-shadow: var(--shadow);
-        }
-
-        /* سطح المكتب الاحترافي */
+        /* سطح المكتب */
         #desktop {
             position: relative; height: 100vh; width: 100vw;
-            background: url('https://w.wallhaven.cc/full/85/wallhaven-85m7qy.jpg') center/cover;
-            display: none; padding: 20px;
+            background: url('https://w.wallhaven.cc/full/j3/wallhaven-j3m8p9.jpg') center/cover;
+            display: none;
         }
 
-        .desktop-icons {
-            display: grid; grid-template-columns: repeat(auto-fill, 110px);
-            grid-auto-rows: 120px; gap: 15px; z-index: 1;
-        }
+        .icons-grid { display: grid; grid-template-columns: repeat(auto-fill, 100px); gap: 20px; padding: 30px; }
+        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
+        .app-item:hover { transform: scale(1.1); }
+        .app-item i { font-size: 40px; margin-bottom: 10px; color: var(--accent); }
 
-        .app-item {
-            display: flex; flex-direction: column; align-items: center;
-            cursor: pointer; border-radius: 15px; padding: 10px;
-        }
-
-        .app-item:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.1); }
-        .app-item i { 
-            font-size: 40px; margin-bottom: 10px; 
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
-        }
-
-        /* نظام النوافذ العبقري */
+        /* النوافذ */
         .window {
-            position: absolute; min-width: 450px; min-height: 350px;
-            background: var(--glass); backdrop-filter: blur(30px);
-            border: 1px solid var(--border); border-radius: 20px;
-            display: flex; flex-direction: column; box-shadow: var(--shadow);
-            overflow: hidden; resize: both; z-index: 100;
+            position: absolute; width: 500px; height: 400px;
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 12px; border: 1px solid var(--border);
+            display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden; z-index: 10;
         }
+        .win-header { padding: 12px; background: rgba(255,255,255,0.05); display: flex; justify-content: space-between; cursor: move; }
+        .win-body { flex: 1; overflow: auto; background: transparent; }
+        .close-btn { color: #ff5f56; cursor: pointer; font-size: 20px; }
 
-        .win-bar {
-            padding: 15px 20px; background: rgba(255,255,255,0.03);
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: move; border-bottom: 1px solid var(--border);
-        }
-
-        .win-body { flex: 1; overflow: auto; background: transparent; position: relative; }
-
-        /* شريط المهام (الدوك) المستقبلي */
+        /* شريط المهام */
         #taskbar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px);
-            padding: 10px 30px; border-radius: 50px; display: flex;
-            align-items: center; gap: 20px; border: 1px solid var(--border);
-            z-index: 9999; box-shadow: var(--shadow);
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.8); height: 50px;
+            display: flex; align-items: center; padding: 0 20px; gap: 20px;
+            border-top: 1px solid var(--border); z-index: 1000;
         }
 
-        .dock-btn { font-size: 28px; color: white; cursor: pointer; }
-        .dock-btn:hover { color: var(--accent); transform: translateY(-10px); }
-
-        /* تطبيقات محددة */
-        canvas#paint-area { background: white; cursor: crosshair; }
-        #cam-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-        
-        .notification {
-            position: fixed; top: 20px; right: -300px;
-            background: var(--glass); border-left: 5px solid var(--accent);
-            padding: 15px; border-radius: 10px; width: 280px; z-index: 10001;
-        }
-
-        /* لغات واتجاهات */
-        [dir="ltr"] .window-controls { flex-direction: row-reverse; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
     </style>
 </head>
-<body onload="Kernel.boot()">
-
-    <div id="notifier" class="notification">
-        <b id="notif-title">System</b>
-        <p id="notif-msg">Hatim OS is online</p>
-    </div>
+<body onload="System.init()">
 
     <div id="lock-screen">
-        <h1 id="lock-timer">00:00</h1>
-        <div class="auth-card">
-            <div id="user-avatar" style="margin-bottom: 20px;">
-                <i class="fas fa-user-shield" style="font-size: 60px; color: var(--accent);"></i>
-            </div>
-            <input type="password" id="sys-pass" placeholder="Password (Default: 1234)" 
-                   style="width:100%; padding:15px; border-radius:15px; border:none; background:#111; color:white; text-align:center;">
-            <button onclick="Kernel.login()" style="width:100%; margin-top:15px; padding:12px; border-radius:15px; background:var(--accent); color:white; border:none; font-weight:bold; cursor:pointer;">
-                UNLOCK SYSTEM
-            </button>
+        <div class="lock-box">
+            <h1 id="lock-time" style="font-size: 40px; margin-bottom: 20px;">00:00</h1>
+            <input type="password" id="pass-in" placeholder="كلمة المرور (1234)" style="width:100%; padding:10px; border-radius:8px; border:none; background:#222; color:white; margin-bottom:10px; text-align:center;">
+            <button onclick="System.login()" style="width:100%; padding:10px; border-radius:8px; border:none; background:var(--accent); color:white; font-weight:bold; cursor:pointer;">دخول</button>
         </div>
     </div>
 
     <div id="desktop">
-        <div class="desktop-icons" id="icon-grid"></div>
-        <div id="window-layer"></div>
-
+        <div class="icons-grid" id="icons-container"></div>
+        <div id="windows-container"></div>
         <div id="taskbar">
-            <i class="fas fa-rocket dock-btn" onclick="Kernel.openApp('Store')"></i>
-            <div id="running-apps" style="display:flex; gap:10px;"></div>
-            <div style="width:1px; height:30px; background:var(--border)"></div>
-            <div id="clock-widget" style="font-weight:bold; font-family:monospace;">00:00:00</div>
+            <i class="fas fa-th-large" style="color:var(--accent); font-size:24px;"></i>
+            <div id="task-time" style="margin-right: auto; font-family: monospace;">00:00</div>
         </div>
     </div>
 
     <script>
-        /* --- النواة المركزية (System Kernel) --- */
-        const Kernel = {
-            lang: 'ar',
-            z: 1000,
-            pass: localStorage.getItem('hos_master_pass') || '1234',
-            apps: {
-                'Browser': { name: 'المتصفح', icon: 'fa-globe', color: '#4285f4' },
-                'Camera': { name: 'الكاميرا', icon: 'fa-camera', color: '#ff0055' },
-                'Paint': { name: 'الرسام', icon: 'fa-brush', color: '#e91e63' },
-                'Music': { name: 'الموسيقى', icon: 'fa-music', color: '#9c27b0' },
-                'Notes': { name: 'الملاحظات', icon: 'fa-edit', color: '#ffc107' },
-                'Weather': { name: 'الطقس', icon: 'fa-cloud-sun', color: '#03a9f4' },
-                'Calc': { name: 'الحاسبة', icon: 'fa-calculator', color: '#4caf50' },
-                'Store': { name: 'المتجر', icon: 'fa-shopping-cart', color: '#00f2ff' },
-                'Settings': { name: 'الإعدادات', icon: 'fa-cog', color: '#607d8b' },
-                'Files': { name: 'ملفاتي', icon: 'fa-folder', color: '#ffeb3b' }
-            },
+        const System = {
+            z: 100,
+            apps: [
+                { id: 'cam', name: 'الكاميرا', icon: 'fa-camera' },
+                { id: 'web', name: 'المتصفح', icon: 'fa-globe' },
+                { id: 'note', name: 'الملاحظات', icon: 'fa-file-alt' },
+                { id: 'paint', name: 'الرسام', icon: 'fa-paint-brush' },
+                { id: 'calc', name: 'الحاسبة', icon: 'fa-calculator' }
+            ],
 
-            boot() {
+            init() {
                 this.updateClock();
                 setInterval(() => this.updateClock(), 1000);
                 this.renderIcons();
-                this.notify("System Ready", "Welcome back, Hatim!");
             },
 
             updateClock() {
-                const now = new Date();
-                const time = now.toLocaleTimeString('en-GB');
-                document.getElementById('lock-timer').innerText = time.substring(0, 5);
-                document.getElementById('clock-widget').innerText = time;
+                const t = new Date().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
+                document.getElementById('lock-time').innerText = t;
+                document.getElementById('task-time').innerText = t;
             },
 
             login() {
-                const val = document.getElementById('sys-pass').value;
-                if(val === this.pass) {
-                    document.getElementById('lock-screen').style.transform = "scale(1.5)";
-                    document.getElementById('lock-screen').style.opacity = "0";
-                    setTimeout(() => {
-                        document.getElementById('lock-screen').style.display = "none";
-                        document.getElementById('desktop').style.display = "block";
-                    }, 600);
-                } else {
-                    this.notify("Error", "كلمة المرور خاطئة!", "#ff0000");
-                }
-            },
-
-            notify(title, msg, color) {
-                const n = document.getElementById('notifier');
-                document.getElementById('notif-title').innerText = title;
-                document.getElementById('notif-msg').innerText = msg;
-                n.style.right = "20px";
-                setTimeout(() => n.style.right = "-300px", 4000);
+                const p = document.getElementById('pass-in').value;
+                if(p === '1234' || p === '') { // يسمح بالدخول بـ 1234 أو فارغ للتجربة
+                    document.getElementById('lock-screen').style.display = 'none';
+                    document.getElementById('desktop').style.display = 'block';
+                } else { alert("كلمة المرور 1234"); }
             },
 
             renderIcons() {
-                const grid = document.getElementById('icon-grid');
-                grid.innerHTML = Object.keys(this.apps).map(id => `
-                    <div class="app-item" onclick="Kernel.openApp('${id}')">
-                        <i class="fas ${this.apps[id].icon}" style="color:${this.apps[id].color}"></i>
-                        <span>${this.apps[id].name}</span>
-                    </div>
-                `).join('');
+                const container = document.getElementById('icons-container');
+                this.apps.forEach(app => {
+                    const div = document.createElement('div');
+                    div.className = 'app-item';
+                    div.onclick = () => this.openApp(app.id, app.name);
+                    div.innerHTML = `<i class="fas ${app.icon}"></i><span>${app.name}</span>`;
+                    container.appendChild(div);
+                });
             },
 
-            openApp(id) {
+            openApp(id, name) {
                 if(document.getElementById('win-' + id)) return;
                 const win = document.createElement('div');
-                win.className = "window"; win.id = 'win-' + id;
+                win.className = 'window'; win.id = 'win-' + id;
+                win.style.top = '100px'; win.style.left = '100px';
                 win.style.zIndex = ++this.z;
-                win.style.top = (100 + (this.z % 50)) + "px";
-                win.style.left = (150 + (this.z % 50)) + "px";
                 
                 win.innerHTML = `
-                    <div class="win-bar" onmousedown="Kernel.drag(event, this)">
-                        <span><i class="fas ${this.apps[id].icon}"></i> ${this.apps[id].name}</span>
-                        <div onclick="Kernel.closeApp('${id}')" style="cursor:pointer; color:red;"><i class="fas fa-times-circle"></i></div>
+                    <div class="win-header" onmousedown="System.drag(event, this)">
+                        <span>${name}</span>
+                        <i class="fas fa-times-circle close-btn" onclick="System.closeApp('${id}')"></i>
                     </div>
-                    <div class="win-body" id="body-${id}">${this.getAppUI(id)}</div>`;
-                document.getElementById('window-layer').appendChild(win);
-                if(id === 'Camera') this.initCamera();
-                if(id === 'Paint') this.initPaint();
+                    <div class="win-body">${this.getUI(id)}</div>`;
+                document.getElementById('windows-container').appendChild(win);
+                if(id === 'cam') this.startCam();
             },
 
-            getAppUI(id) {
-                switch(id) {
-                    case 'Browser': return `<iframe src="https://www.bing.com" style="width:100%; height:450px; border:none; background:white;"></iframe>`;
-                    case 'Camera': return `<video id="cam-feed" autoplay playsinline></video>`;
-                    case 'Paint': return `<canvas id="paint-area" width="500" height="400"></canvas>`;
-                    case 'Music': return `<div style="padding:40px; text-align:center;"><i class="fas fa-compact-disc fa-spin" style="font-size:80px; color:var(--accent)"></i><br><br><b>Now Playing: Hatim Mix</b></div>`;
-                    case 'Calc': return `<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:5px; padding:10px;">${['7','8','9','/','4','5','6','*','1','2','3','-','0','.','=','+'].map(b=>`<button style="padding:20px; border-radius:10px; border:none; background:#222; color:white;">${b}</button>`).join('')}</div>`;
-                    case 'Settings': return `<div style="padding:20px;">
-                        <button onclick="Kernel.toggleLang()" style="width:100%; padding:15px; background:var(--accent); border:none; color:white; border-radius:10px; cursor:pointer;">EN / AR</button>
-                        <hr><button onclick="Kernel.format()" style="width:100%; padding:10px; background:red; border:none; color:white;">Format OS</button>
-                    </div>`;
-                    case 'Files': return `<div style="padding:20px;"><i class="fas fa-file"></i> notes.txt<br><i class="fas fa-image"></i> wallpaper.jpg</div>`;
-                    default: return `<div style="padding:30px;">تطبيق ${id} قيد العمل..</div>`;
-                }
-            },
-
-            initCamera() {
-                const vid = document.getElementById('cam-feed');
-                navigator.mediaDevices.getUserMedia({video:true}).then(s => vid.srcObject = s).catch(e => this.notify("Cam Error", "الكاميرا لا تعمل"));
-            },
-
-            initPaint() {
-                const canvas = document.getElementById('paint-area');
-                const ctx = canvas.getContext('2d');
-                let drawing = false;
-                canvas.onmousedown = () => drawing = true;
-                canvas.onmouseup = () => { drawing = false; ctx.beginPath(); };
-                canvas.onmousemove = (e) => {
-                    if(!drawing) return;
-                    ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.strokeStyle = "#ff0055";
-                    const rect = canvas.getBoundingClientRect();
-                    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke();
-                }
+            getUI(id) {
+                if(id === 'cam') return `<video id="video-feed" autoplay playsinline></video>`;
+                if(id === 'web') return `<iframe src="https://www.bing.com"></iframe>`;
+                if(id === 'note') return `<textarea style="width:100%; height:100%; background:none; color:white; padding:15px; border:none; outline:none; font-size:18px;"></textarea>`;
+                if(id === 'paint') return `<iframe src="https://jspaint.app"></iframe>`;
+                if(id === 'calc') return `<iframe src="https://www.google.com/search?q=calculator&igu=1"></iframe>`;
+                return ``;
             },
 
             closeApp(id) {
-                if(id === 'Camera') {
-                    const v = document.getElementById('cam-feed');
+                const win = document.getElementById('win-' + id);
+                if(id === 'cam') {
+                    const v = document.getElementById('video-feed');
                     if(v && v.srcObject) v.srcObject.getTracks().forEach(t => t.stop());
                 }
-                document.getElementById('win-' + id).remove();
+                win.remove();
             },
 
-            drag(e, bar) {
-                const win = bar.parentElement; win.style.zIndex = ++this.z;
-                let x = e.clientX - win.offsetLeft, y = e.clientY - win.offsetTop;
-                document.onmousemove = (ev) => { win.style.left = ev.clientX - x + "px"; win.style.top = ev.clientY - y + "px"; };
+            startCam() {
+                const v = document.getElementById('video-feed');
+                navigator.mediaDevices.getUserMedia({ video: true })
+                .then(s => v.srcObject = s)
+                .catch(e => alert("تأكد من إعطاء صلاحية الكاميرا في المتصفح"));
+            },
+
+            drag(e, header) {
+                const win = header.parentElement; win.style.zIndex = ++this.z;
+                let ox = e.clientX - win.offsetLeft, oy = e.clientY - win.offsetTop;
+                document.onmousemove = (ev) => {
+                    win.style.left = ev.clientX - ox + "px";
+                    win.style.top = ev.clientY - oy + "px";
+                };
                 document.onmouseup = () => document.onmousemove = null;
-            },
-
-            toggleLang() {
-                this.lang = this.lang === 'ar' ? 'en' : 'ar';
-                document.getElementById('hatim-os-root').dir = this.lang === 'ar' ? 'rtl' : 'ltr';
-                this.notify("Language Changed", "Current: " + this.lang);
-            },
-
-            format() { if(confirm("حذف كل شيء؟")) { localStorage.clear(); location.reload(); } }
-        }
+            }
+        };
     </script>
 </body>
 </html>
