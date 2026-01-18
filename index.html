@@ -8,7 +8,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body onload="OS.boot()">
+<body onload="HatimOS.boot()">
 
 <!-- خلفية النجوم -->
 <div id="space"></div>
@@ -17,20 +17,31 @@
 <div id="lock" onclick="this.style.transform='translateY(-100%)'">
   <div class="icon" style="font-size:50px;margin-bottom:20px;">H</div>
   <h1 id="clock">00:00:00</h1>
-  <p>HATIM OS INFINITY</p>
+  <p>HATIM OS INFINITY 2.0</p>
   <p style="color:var(--accent);margin-top:20px">اضغط للدخول</p>
 </div>
 
 <!-- سطح المكتب -->
 <div id="desktop"></div>
 
+<!-- متجر التطبيقات -->
+<div id="store" class="overlay">
+  <div class="store-header">
+    <h1><i class="fas fa-shopping-bag"></i> متجر التطبيقات</h1>
+    <button onclick="HatimOS.toggleStore(false)">×</button>
+  </div>
+  <div id="store-items" class="store-grid"></div>
+</div>
+
 <!-- شريط المهام -->
 <div id="taskbar">
-  <div class="icon" onclick="OS.open('Snake')" title="Snake">🐍</div>
-  <div class="icon" onclick="OS.open('Tetris')" title="Tetris">🟦</div>
-  <div class="icon" onclick="OS.open('Browser')" title="Browser">🌐</div>
-  <div class="icon" onclick="OS.open('AI')" title="AI Assistant">🤖</div>
-  <div class="icon" onclick="OS.open('Terminal')" title="Terminal">💻</div>
+  <div class="icon" onclick="HatimOS.toggleStore(true)" title="App Store">🛒</div>
+  <div class="icon" onclick="HatimOS.open('Snake')" title="Snake">🐍</div>
+  <div class="icon" onclick="HatimOS.open('Tetris')" title="Tetris">🟦</div>
+  <div class="icon" onclick="HatimOS.open('Piano')" title="Piano Game">🎹</div>
+  <div class="icon" onclick="HatimOS.open('Browser')" title="Browser">🌐</div>
+  <div class="icon" onclick="HatimOS.open('AI')" title="AI Assistant">🤖</div>
+  <div class="icon" onclick="HatimOS.open('Terminal')" title="Terminal">💻</div>
   <div id="mini-clock">00:00</div>
 </div>
 
