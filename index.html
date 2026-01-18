@@ -3,38 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hatim OS ∞</title>
+    <title>Hatim OS Infinity 2.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body onload="HatimOS.boot()">
+<body onload="HOS.boot()">
 
     <div id="background">
-        <div id="space"></div> </div>
+        <div id="stars-container"></div>
+    </div>
 
-    <div id="lock" onclick="HatimOS.unlock()">
-        <div class="brand">H</div>
-        <h1 id="clock">00:00:00</h1>
-        <p>HATIM OS INFINITY</p>
-        <p class="blink">اضغط للدخول</p>
+    <div id="lock-screen">
+        <div class="lock-content">
+            <div class="avatar"><i class="fas fa-user-astronaut"></i></div>
+            <h1 id="lock-clock">00:00</h1>
+            <div class="login-box">
+                <input type="password" id="pass-field" placeholder="كلمة المرور (1234)">
+                <button onclick="HOS.checkPassword()"><i class="fas fa-arrow-left"></i></button>
+            </div>
+            <p id="error-msg"></p>
+        </div>
     </div>
 
     <div id="desktop"></div>
 
-    <div id="store" class="overlay">
+    <div id="app-store" class="overlay">
         <div class="store-header">
-            <h1><i class="fas fa-shopping-bag"></i> متجر التطبيقات</h1>
-            <button class="close-btn" onclick="HatimOS.toggleStore(false)">×</button>
+            <h2><i class="fas fa-store"></i> متجر هاتم</h2>
+            <button onclick="HOS.toggleStore(false)">×</button>
         </div>
         <div id="store-items" class="store-grid"></div>
     </div>
 
     <div id="taskbar">
-        <div class="start-btn" onclick="HatimOS.toggleStore(true)">
+        <div class="start-btn" onclick="HOS.toggleStore(true)">
             <i class="fas fa-th-large"></i>
         </div>
-        <div id="active-apps"></div>
-        <div id="mini-clock">00:00</div>
+        <div id="running-apps"></div>
+        <div id="system-tray">
+            <i class="fas fa-wifi"></i>
+            <span id="mini-clock">00:00</span>
+        </div>
     </div>
 
     <script src="app.js"></script>
