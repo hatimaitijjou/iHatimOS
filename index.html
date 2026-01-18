@@ -3,224 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HATIM OS | The Future 2026</title>
+    <title>HATIM OS | INFINITY 2026</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #00a2ed;
-            --glass: rgba(20, 20, 20, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #ffffff;
+            --bg: #050505;
+            --surface: rgba(15, 15, 15, 0.6);
+            --accent: #00d2ff;
+            --accent-glow: rgba(0, 210, 255, 0.4);
+            --glass: blur(30px) saturate(180%);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { margin: 0; background: #000; color: var(--text); height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: #fff; height: 100vh; overflow: hidden; }
 
-        /* --- خلفية النظام --- */
-        #desktop-bg {
-            position: fixed; inset: 0; z-index: -1;
-            background: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070') center/cover;
-            transition: 0.5s;
+        /* --- خلفية كونية متحركة --- */
+        #nebula-bg {
+            position: fixed; inset: 0; z-index: -2;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle 3s infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* --- شعار حاتم العالمي --- */
+        .h-brand {
+            width: 50px; height: 50px; background: linear-gradient(135deg, var(--accent), #3a7bd5);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 26px; color: #fff; box-shadow: 0 0 20px var(--accent-glow);
+            cursor: pointer; transition: 0.3s;
+        }
+        .h-brand:hover { transform: rotate(10deg) scale(1.1); }
+
+        /* --- سطح المكتب --- */
+        #desktop {
+            height: 100vh; padding: 30px; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            grid-auto-rows: 100px; gap: 20px; z-index: 1;
+        }
+
+        .app-node {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.2s; padding: 10px; border-radius: 15px;
+        }
+        .app-node:hover { background: rgba(255,255,255,0.05); backdrop-filter: var(--glass); }
+        .app-node i { font-size: 35px; color: var(--accent); filter: drop-shadow(0 0 10px var(--accent-glow)); }
+        .app-node span { font-size: 12px; font-weight: 500; text-align: center; }
+
+        /* --- متجر تطبيقات حاتم اللامتناهي --- */
+        #store-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(50px);
+            z-index: 10000; display: none; padding: 50px; overflow-y: auto;
+        }
+        .store-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .store-card {
+            background: var(--surface); border: 1px solid var(--border); padding: 20px;
+            border-radius: 20px; transition: 0.3s; cursor: pointer; text-align: center;
+        }
+        .store-card:hover { border-color: var(--accent); background: rgba(255,255,255,0.05); }
+
+        /* --- النوافذ (Next-Gen Windows) --- */
+        .win {
+            position: absolute; background: var(--surface); backdrop-filter: var(--glass);
+            border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            display: flex; flex-direction: column; overflow: hidden; z-index: 10;
+        }
+        .win-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); cursor: move; }
+        .win-body { flex: 1; overflow: auto; position: relative; }
+
+        /* --- شريط المهام --- */
+        #taskbar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            height: 70px; background: var(--surface); backdrop-filter: var(--glass);
+            border-radius: 25px; border: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 25px; gap: 20px; z-index: 9999;
+        }
+        .dock-tool { font-size: 24px; color: #aaa; transition: 0.3s; cursor: pointer; }
+        .dock-tool:hover { color: var(--accent); transform: scale(1.3) translateY(-10px); }
 
         /* --- شاشة القفل --- */
-        #lock-screen {
-            position: fixed; inset: 0; z-index: 100000; 
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+        #lock {
+            position: fixed; inset: 0; background: #000; z-index: 999999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: 1s cubic-bezier(0.85, 0, 0.15, 1);
         }
-        #lock-screen.unlocked { transform: translateY(-100%); opacity: 0; }
-
-        /* --- الشعار الخاص بحاتم --- */
-        .h-logo-icon {
-            width: 80px; height: 80px; background: linear-gradient(45deg, #00c6ff, #0072ff);
-            border-radius: 15px; display: flex; align-items: center; justify-content: center;
-            font-size: 45px; font-weight: 900; color: white; margin-bottom: 20px;
-            box-shadow: 0 0 30px rgba(0, 162, 237, 0.6);
-        }
-
-        /* --- سطح المكتب والأيقونات --- */
-        #desktop { height: 100vh; padding: 20px; display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start; gap: 15px; }
-        .app-icon {
-            width: 80px; padding: 10px; border-radius: 10px; text-align: center;
-            cursor: pointer; transition: 0.2s;
-        }
-        .app-icon:hover { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
-        .app-icon img { width: 45px; height: 45px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); }
-        .app-icon span { display: block; font-size: 12px; margin-top: 5px; text-shadow: 0 2px 4px #000; }
-
-        /* --- النوافذ الزجاجية المتطورة --- */
-        .window {
-            position: absolute; background: var(--glass); backdrop-filter: blur(25px);
-            border: 1px solid var(--border); border-radius: 15px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5); display: flex; flex-direction: column;
-            overflow: hidden; min-width: 300px; z-index: 10;
-        }
-        .title-bar { background: rgba(255,255,255,0.05); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; cursor: move; }
-        .win-ctrls { display: flex; gap: 8px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; }
-
-        /* --- شريط المهام (Taskbar) --- */
-        #taskbar {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            height: 65px; background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(15px);
-            border-radius: 20px; border: 1px solid var(--border);
-            display: flex; align-items: center; gap: 15px; padding: 0 20px; z-index: 99999;
-        }
-        .dock-item { width: 45px; height: 45px; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
-        .dock-item:hover { transform: scale(1.4) translateY(-10px); }
-
-        /* --- محتوى التطبيقات --- */
-        .content { flex: 1; padding: 15px; overflow: auto; }
-        textarea#notepad-area { width: 100%; height: 200px; background: transparent; border: none; color: white; resize: none; font-size: 16px; outline: none; }
-        input.os-input { width: 100%; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 8px; color: white; margin-bottom: 10px; }
     </style>
 </head>
-<body>
+<body onload="bootOS()">
 
-    <div id="desktop-bg"></div>
-
-    <div id="lock-screen" onclick="unlockOS()">
-        <div class="h-logo-icon">H</div>
-        <h1 id="lock-time" style="font-size: 70px; margin: 0;">00:00</h1>
-        <p style="font-size: 1.5rem; font-weight: 300;">Hatim Ait Addjou</p>
-        <p style="opacity: 0.6; margin-top: 50px;">انقر للتشغيل</p>
+    <div id="nebula-bg"></div>
+    <div id="lock" onclick="this.style.transform='translateY(-100%)'">
+        <div class="h-brand" style="width:100px; height:100px; font-size:50px; margin-bottom:20px;">H</div>
+        <h1 id="clock" style="font-size: 80px; margin: 0; font-weight: 200;">00:00</h1>
+        <p style="letter-spacing: 5px; opacity: 0.5;">HATIM OS INFINITY</p>
+        <p style="margin-top: 40px; font-size: 0.9rem; color: var(--accent);">إضغط للدخول إلى العالمية</p>
     </div>
 
-    <div id="desktop">
+    <div id="desktop"></div>
+
+    <div id="store-overlay">
+        <div class="store-header">
+            <h1><i class="fas fa-shopping-bag"></i> متجر حاتم اللامتناهي</h1>
+            <button onclick="closeStore()" style="background:none; border:none; color:white; font-size:30px; cursor:pointer;">&times;</button>
         </div>
+        <div class="store-grid" id="store-items">
+            </div>
+    </div>
 
     <div id="taskbar">
-        <div class="h-logo-icon" style="width:40px; height:40px; font-size:20px; border-radius:8px; margin:0; cursor:pointer;" onclick="alert('Hatim OS v3.0 - 2026')">H</div>
-        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968830.png" class="dock-item" onclick="openApp('browser')">
-        <img src="https://cdn-icons-png.flaticon.com/512/3308/3308395.png" class="dock-item" onclick="openApp('store')">
-        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055644.png" class="dock-item" onclick="openApp('files')">
-        <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" class="dock-item" onclick="openApp('settings')">
+        <div class="h-brand" onclick="toggleStore()" title="Hatim Menu">H</div>
+        <i class="fas fa-search dock-tool"></i>
+        <i class="fas fa-robot dock-tool" onclick="openApp('AI')"></i>
+        <i class="fas fa-globe dock-tool" onclick="openApp('Web')"></i>
+        <i class="fas fa-code dock-tool" onclick="openApp('Dev')"></i>
+        <div style="width:1px; height:30px; background:var(--border);"></div>
+        <div id="mini-clock" style="font-size:12px; color:#888;">00:00</div>
     </div>
 
     <script>
         let zIndex = 100;
-        
-        // --- محرك الذاكرة (Memory Engine) ---
-        const HatimMemory = {
-            save(key, value) { localStorage.setItem('hatim_os_' + key, JSON.stringify(value)); },
-            load(key) { return JSON.parse(localStorage.getItem('hatim_os_' + key)); }
-        };
+        const desktopApps = JSON.parse(localStorage.getItem('h_apps')) || ['Store', 'Hatim AI', 'Browser', 'Terminal'];
 
-        // --- البيانات الافتراضية ---
-        let apps = HatimMemory.load('installed_apps') || ['browser', 'store', 'files', 'settings', 'notepad'];
-        let wallpaper = HatimMemory.load('wallpaper') || 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070';
-        let notes = HatimMemory.load('notes') || "مرحباً بك في نظام حاتم... اكتب هنا ما تريد.";
-
-        function init() {
-            document.getElementById('desktop-bg').style.backgroundImage = `url('${wallpaper}')`;
-            renderIcons();
-            updateTime();
-            setInterval(updateTime, 1000);
+        function bootOS() {
+            createStars();
+            renderDesktop();
+            updateClock();
+            setInterval(updateClock, 1000);
+            loadStore();
         }
 
-        function updateTime() {
-            const now = new Date();
-            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('lock-time').innerText = timeStr;
+        function createStars() {
+            for(let i=0; i<100; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random()*3+'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random()*100+'vw';
+                star.style.top = Math.random()*100+'vh';
+                document.getElementById('nebula-bg').appendChild(star);
+            }
         }
 
-        function unlockOS() {
-            document.getElementById('lock-screen').classList.add('unlocked');
+        function updateClock() {
+            const d = new Date();
+            const t = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
+            document.getElementById('clock').innerText = t;
+            document.getElementById('mini-clock').innerText = t;
         }
 
-        function renderIcons() {
+        function renderDesktop() {
             const desk = document.getElementById('desktop');
             desk.innerHTML = '';
-            apps.forEach(app => {
-                const iconMap = {
-                    browser: {n: 'المتصفح', i: 'https://cdn-icons-png.flaticon.com/512/5968/5968830.png'},
-                    store: {n: 'المتجر', i: 'https://cdn-icons-png.flaticon.com/512/3308/3308395.png'},
-                    files: {n: 'ملفاتي', i: 'https://cdn-icons-png.flaticon.com/512/1055/1055644.png'},
-                    settings: {n: 'الإعدادات', i: 'https://cdn-icons-png.flaticon.com/512/3062/3062634.png'},
-                    notepad: {n: 'المفكرة', i: 'https://cdn-icons-png.flaticon.com/512/3050/3050525.png'}
-                };
-                const appInfo = iconMap[app] || {n: app, i: 'https://cdn-icons-png.flaticon.com/512/2522/2522717.png'};
+            desktopApps.forEach(app => {
                 desk.innerHTML += `
-                    <div class="app-icon" ondblclick="openApp('${app}')">
-                        <img src="${appInfo.i}">
-                        <span>${appInfo.n}</span>
+                    <div class="app-node" ondblclick="openApp('${app}')">
+                        <i class="${getIcon(app)}"></i>
+                        <span>${app}</span>
                     </div>
                 `;
             });
         }
 
-        function openApp(type) {
+        function getIcon(name) {
+            const icons = { 'Store': 'fas fa-box-open', 'Hatim AI': 'fas fa-brain', 'Browser': 'fas fa-compass', 'Terminal': 'fas fa-terminal', 'YouTube': 'fab fa-youtube', 'Spotify': 'fab fa-spotify', 'Instagram': 'fab fa-instagram' };
+            return icons[name] || 'fas fa-rocket';
+        }
+
+        function openApp(name) {
             zIndex++;
             const win = document.createElement('div');
-            win.className = 'window';
+            win.className = 'win';
             win.style.zIndex = zIndex;
-            win.style.top = '100px'; win.style.left = '30%'; win.style.width = '500px';
-
-            let title = type;
-            let content = '';
-
-            if(type === 'settings') {
-                title = 'الإعدادات العالمية';
-                content = `
-                    <label>رابط خلفية سطح المكتب:</label>
-                    <input class="os-input" id="wall-in" value="${wallpaper}">
-                    <button class="os-input" style="background:var(--primary); border:none;" onclick="saveSettings()">حفظ وتطبيق</button>
-                    <p style="font-size:12px; opacity:0.6;">إصدار Hatim OS 3.0 | 2026</p>
-                `;
-            } else if(type === 'notepad') {
-                title = 'المفكرة';
-                content = `<textarea id="notepad-area" oninput="saveNote(this.value)">${notes}</textarea>`;
-            } else if(type === 'store') {
-                title = 'متجر حاتم العالمي';
-                content = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div style="background:rgba(255,255,255,0.1); padding:10px; border-radius:10px; text-align:center;">
-                        <i class="fab fa-instagram fa-2x"></i><br>Instagram<br>
-                        <button onclick="installApp('instagram')" style="margin-top:5px;">تثبيت</button>
-                    </div>
-                </div>`;
-            } else {
-                content = `<div style="padding:20px;">هذا التطبيق يعمل بكفاءة في بيئة حاتم السحابية.</div>`;
-            }
+            win.style.width = '80vw'; win.style.height = '70vh';
+            win.style.top = '10vh'; win.style.left = '10vw';
 
             win.innerHTML = `
-                <div class="title-bar" onmousedown="dragWin(this)">
-                    <span>${title}</span>
-                    <div class="win-ctrls">
-                        <div class="dot" style="background:#febc2e"></div>
-                        <div class="dot" style="background:#28c840"></div>
-                        <div class="dot" style="background:#ff5f57" onclick="this.closest('.window').remove()"></div>
+                <div class="win-bar" onmousedown="drag(this)">
+                    <span><i class="${getIcon(name)}"></i> ${name}</span>
+                    <div style="display:flex; gap:10px;">
+                        <div style="width:12px; height:12px; background:#28c840; border-radius:50%;"></div>
+                        <div style="width:12px; height:12px; background:#ff5f57; border-radius:50%; cursor:pointer;" onclick="this.closest('.win').remove()"></div>
                     </div>
                 </div>
-                <div class="content">${content}</div>
+                <div class="win-body">
+                    ${getAppContent(name)}
+                </div>
             `;
             document.body.appendChild(win);
         }
 
-        function saveNote(val) {
-            notes = val;
-            HatimMemory.save('notes', val);
+        function getAppContent(name) {
+            if(name === 'Hatim AI') return `<div style="padding:40px; text-align:center;"><h2>Nebula AI Assistant</h2><p>أهلاً بك حاتم، أنا محرك الذكاء الخاص بك. كيف يمكنني تطوير عالمنا اليوم؟</p><input type="text" placeholder="أمر برمجي..." style="width:80%; padding:15px; border-radius:30px; border:none; background:rgba(255,255,255,0.05); color:white; text-align:center;"></div>`;
+            if(name === 'Browser') return `<iframe src="https://www.google.com/search?igu=1" style="width:100%; height:100%; border:none; background:white;"></iframe>`;
+            return `<div style="padding:40px; text-align:center;"><h3>تطبيق ${name} العالمي</h3><p>يعمل الآن ضمن بيئة Hatim OS السحابية.</p></div>`;
         }
 
-        function saveSettings() {
-            wallpaper = document.getElementById('wall-in').value;
-            HatimMemory.save('wallpaper', wallpaper);
-            document.getElementById('desktop-bg').style.backgroundImage = `url('${wallpaper}')`;
-            alert('تم حفظ الإعدادات في ذاكرة حاتم!');
+        function toggleStore() { document.getElementById('store-overlay').style.display = 'block'; }
+        function closeStore() { document.getElementById('store-overlay').style.display = 'none'; }
+
+        function loadStore() {
+            const items = ['YouTube', 'Spotify', 'Instagram', 'ChatGPT', 'WhatsApp', 'Netflix', 'Discord', 'Facebook', 'TikTok', 'Twitter', 'VS Code', 'GitHub'];
+            const grid = document.getElementById('store-items');
+            items.forEach(item => {
+                grid.innerHTML += `
+                    <div class="store-card" onclick="installApp('${item}')">
+                        <i class="${getIcon(item)}" style="font-size:40px; color:var(--accent); margin-bottom:15px;"></i>
+                        <h3>${item}</h3>
+                        <p style="font-size:0.8rem; opacity:0.6;">تطبيق رسمي لنظام حاتم</p>
+                        <button style="background:var(--accent); border:none; color:black; padding:8px 20px; border-radius:20px; font-weight:bold; margin-top:10px;">تثبيت</button>
+                    </div>
+                `;
+            });
         }
 
         function installApp(name) {
-            if(!apps.includes(name)) {
-                apps.push(name);
-                HatimMemory.save('installed_apps', apps);
-                renderIcons();
-                alert('تم تثبيت ' + name + ' بنجاح!');
+            if(!desktopApps.includes(name)) {
+                desktopApps.push(name);
+                localStorage.setItem('h_apps', JSON.stringify(desktopApps));
+                renderDesktop();
+                alert('تم تثبيت ' + name + ' بنجاح في عالمك!');
             }
         }
 
-        function dragWin(el) {
-            const win = el.closest('.window');
+        function drag(el) {
+            const win = el.closest('.win');
             el.onmousedown = (e) => {
                 let px = e.clientX - win.offsetLeft;
                 let py = e.clientY - win.offsetTop;
@@ -229,11 +236,8 @@
                     win.style.top = (e.clientY - py) + 'px';
                 };
                 document.onmouseup = () => document.onmousemove = null;
-                win.style.zIndex = ++zIndex;
             };
         }
-
-        init();
     </script>
 </body>
 </html>
