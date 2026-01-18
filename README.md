@@ -1,62 +1,36 @@
-🚀 HATIM ZENITH OS | Infinity Global Edition
-The Most Advanced Web-Based Operating System for the Community.
+# 🚀 HATIM ZENITH OS | Infinity Global Edition
 
-[English version below]
+<p align="center">
+  <img src="https://hatimaitijjou.github.io/Hatim-os/logo.png" alt="Hatim OS Logo" width="200"/>
+</p>
 
-🌍 نظرة عامة (Arabic)
-نظام HATIM ZENITH هو مشروع مفتوح المصدر (Open Source) يهدف لبناء بيئة تشغيل كاملة داخل المتصفح. تم تصميم النظام باستخدام التقنيات الحديثة (HTML5, CSS3, JS) ليكون خفيفاً، قابلاً للتخصيص، وعالمياً. نحن ندعو جميع المطورين للمساهمة في بناء هذا المستقبل.
+## 🌟 About the Developer / عن المطور
+* **Name:** Hatim Aït Ijjou
+* **Age:** 11 Years Old
+* **Role:** Founder & Lead Developer of Hatim Zenith OS
+* **Goal:** Building the most advanced web-based operating system for the community.
 
-✨ الميزات الحالية:
-نظام نوافذ متطور: دعم السحب، الإغلاق، والتركيز.
+---
 
-هوية بصرية: واجهة زجاجية (Glassmorphism) مع ودجات ذكية.
+## 💻 About Hatim Zenith OS / عن النظام
+**Hatim Zenith OS** is a personal web-based dashboard designed for notes, projects, and task management. It features a futuristic **Glassmorphism** design and is fully Open Source.
 
-نظام تطبيقات مرن: مبني على مصفوفات سهلة التعديل.
+### 🛠️ Key Features / المميزات:
+* **Interactive Desktop:** Functional Dock and window management (Drag, Close, Focus).
+* **Built-in Apps:** Web Browser, Text Editor, Maps, Camera, and Drawing app.
+* **Security:** Secure Login system (Start Session) with password protection.
+* **Data Persistence:** Auto-save support for your projects.
 
-نظام دخول محمي: واجهة تسجيل دخول احترافية.
+---
 
-🛠️ كيف تطور النظام؟
-لإضافة تطبيق جديد، لا تحتاج لكتابة كود معقد. فقط اذهب إلى مصفوفة Kernel.apps في ملف index.html وأضف كود تطبيقك:
+## 🌐 Links / الروابط
+* **Live Demo:** [Try Hatim OS Here](https://hatimaitijjou.github.io/Hatim-os/)
+* **Source Code:** [GitHub Repository](https://github.com/hatimaitijjou/Hatim-os)
 
-JavaScript
+---
 
-'new_app': { 
-    name: 'اسم التطبيق', 
-    icon: 'fa-icon-name', 
-    color: '#hex_code', 
-    url: 'رابط_التطبيق' 
-}
-🌍 Overview (English)
-HATIM ZENITH is an open-source web desktop environment built to push the limits of what's possible in a browser. It’s lightweight, modular, and built for developers by developers.
+## 📈 Project Stats / إحصائيات
+* **Total Commits:** Over 127 updates and counting!
+* **License:** Open Source for everyone to learn.
 
-🚀 Key Features:
-Advanced Windowing: Drag-and-drop, focus management, and responsive layouts.
-
-Stunning UI: Glassmorphism design with interactive widgets.
-
-App Ecosystem: Easily expandable via a central JavaScript configuration.
-
-Secure Boot: Professional login and loading sequences.
-
-👨‍💻 Contribution Guide:
-We welcome developers from all over the world!
-
-Fork the project.
-
-Create a new feature branch (git checkout -b feature/CoolFeature).
-
-Commit your changes (git commit -m 'Add some CoolFeature').
-
-Push to the branch (git push origin feature/CoolFeature).
-
-Open a Pull Request.
-
-🗺️ Roadmap (Planned Features):
-[ ] Global Real-time Chat (Firebase Integration).
-
-[ ] Local Storage File System (Save your files in the browser).
-
-[ ] Custom Theme Engine (Dynamic CSS Variables).
-
-📄 License
-This project is licensed under the MIT License - meaning you are free to use, modify, and distribute it!
+"I believe that age is just a number when it comes to coding. I’m here to learn and build the future!" 🚀
