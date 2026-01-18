@@ -9,43 +9,39 @@
 </head>
 <body onload="HOS.boot()">
 
-    <div id="background">
-        <div id="stars-container"></div>
-    </div>
+    <div id="background"></div>
 
     <div id="lock-screen">
-        <div class="lock-content">
+        <div class="lock-container">
             <div class="avatar"><i class="fas fa-user-astronaut"></i></div>
             <h1 id="lock-clock">00:00</h1>
-            <div class="login-box">
-                <input type="password" id="pass-field" placeholder="كلمة المرور (1234)">
-                <button onclick="HOS.checkPassword()"><i class="fas fa-arrow-left"></i></button>
+            <div id="setup-area" style="display:none;">
+                <p>إعداد النظام لأول مرة</p>
+                <div class="input-group">
+                    <input type="password" id="new-pass" placeholder="اختر كلمة مرور">
+                    <button onclick="HOS.saveFirstPass()"><i class="fas fa-check"></i></button>
+                </div>
             </div>
-            <p id="error-msg"></p>
+            <div id="login-area" style="display:none;">
+                <div class="input-group">
+                    <input type="password" id="pass-field" placeholder="كلمة المرور">
+                    <button onclick="HOS.checkPass()"><i class="fas fa-arrow-left"></i></button>
+                </div>
+                <p id="error-msg"></p>
+            </div>
         </div>
     </div>
 
-    <div id="desktop"></div>
-
-    <div id="app-store" class="overlay">
-        <div class="store-header">
-            <h2><i class="fas fa-store"></i> متجر هاتم</h2>
-            <button onclick="HOS.toggleStore(false)">×</button>
-        </div>
-        <div id="store-items" class="store-grid"></div>
+    <div id="desktop">
+        <div id="icons-grid"></div>
+        <div id="windows-container"></div>
     </div>
 
     <div id="taskbar">
-        <div class="start-btn" onclick="HOS.toggleStore(true)">
-            <i class="fas fa-th-large"></i>
-        </div>
-        <div id="running-apps"></div>
-        <div id="system-tray">
-            <i class="fas fa-wifi"></i>
-            <span id="mini-clock">00:00</span>
-        </div>
+        <div class="start-btn" onclick="HOS.openApp('Settings')"><i class="fas fa-cog"></i></div>
+        <div id="mini-clock">00:00</div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="apps.js"></script>
 </body>
 </html>
