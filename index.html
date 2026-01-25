@@ -3,128 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hatim OS Infinity - Global Edition v2.0</title>
+    <title>Hatim OS Infinity AI - v4.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --accent: #00f2ff; --bg: #050505; --glass: rgba(15, 15, 15, 0.95);
-            --border: rgba(0, 242, 255, 0.2); --shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            --accent: #00f2ff; --bg: #050505; --glass: rgba(15, 15, 15, 0.85);
+            --border: rgba(0, 242, 255, 0.3); --shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
         }
-        * { box-sizing: border-box; transition: 0.3s; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; color: white; }
-
-        /* شاشة الدخول الاحترافية */
-        #login-screen {
-            position: fixed; inset: 0; z-index: 10000;
-            background: radial-gradient(circle at center, #111, #000);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .login-card { background: var(--glass); padding: 40px; border-radius: 25px; border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow); width: 350px; }
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #000; color: white; }
+        #desktop { position: relative; height: 100vh; width: 100vw; background: url('https://w.wallhaven.cc/full/85/wallhaven-85m7qy.jpg') center/cover; display: none; }
+        #login-screen { position: fixed; inset: 0; z-index: 10000; background: #000; display: flex; align-items: center; justify-content: center; }
+        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, 120px); gap: 20px; padding: 60px; }
+        .app-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 10px; border-radius: 20px; }
+        .app-card:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); }
+        .app-icon { width: 70px; height: 70px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 10px; box-shadow: var(--shadow); }
+        .window { position: absolute; width: 800px; height: 550px; background: var(--glass); backdrop-filter: blur(25px); border-radius: 25px; border: 1px solid var(--border); display: flex; flex-direction: column; box-shadow: var(--shadow); overflow: hidden; z-index: 10; }
+        .win-header { padding: 15px 25px; background: rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; cursor: move; }
+        #taskbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); padding: 10px 35px; border-radius: 40px; border: 1px solid var(--border); z-index: 9999; display: flex; gap: 25px; align-items: center; }
         
-        /* سطح المكتب */
-        #desktop {
-            position: relative; height: 100vh; width: 100vw;
-            background: url('https://w.wallhaven.cc/full/85/wallhaven-85m7qy.jpg') center/cover;
-            display: none;
-        }
-        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, 110px); gap: 20px; padding: 40px; }
-        .app-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; text-align: center; }
-        .app-icon { width: 65px; height: 65px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-bottom: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-
-        /* النوافذ العصرية */
-        .window {
-            position: absolute; width: 700px; height: 500px;
-            background: var(--glass); backdrop-filter: blur(25px);
-            border-radius: 20px; border: 1px solid var(--border);
-            display: flex; flex-direction: column; box-shadow: var(--shadow); overflow: hidden; z-index: 10;
-        }
-        .win-header { padding: 15px 20px; background: rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; cursor: move; }
-        .win-body { flex: 1; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* شريط المهام العالمي */
-        #taskbar {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
-            padding: 8px 30px; border-radius: 40px; display: flex; gap: 20px; align-items: center; border: 1px solid var(--border); z-index: 9999;
-        }
-        .dock-tool { font-size: 24px; color: var(--accent); cursor: pointer; }
+        /* تصميم الدردشة */
+        #chat-container { display: flex; flex-direction: column; height: 100%; background: #0a0a0a; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 15px; border-radius: 15px; max-width: 80%; line-height: 1.5; }
+        .user-msg { align-self: flex-end; background: var(--accent); color: #000; }
+        .ai-msg { align-self: flex-start; background: #222; color: #fff; border: 1px solid var(--border); }
+        #chat-input-area { display: flex; padding: 15px; background: #111; gap: 10px; }
+        #chat-input { flex: 1; background: #222; border: 1px solid var(--border); border-radius: 10px; color: white; padding: 10px; outline: none; }
     </style>
 </head>
-<body onload="System.boot()">
+<body onload="System.init()">
 
     <div id="login-screen">
-        <div class="login-card">
-            <h1 style="letter-spacing: 5px; color: var(--accent);">HATIM OS</h1>
-            <p style="opacity: 0.5;">Global Open Source Edition</p>
-            <input type="text" id="user-name" placeholder="User Name" style="width:100%; padding:12px; margin:15px 0; border-radius:10px; border:none; background:#222; color:white; text-align:center;">
-            <input type="password" id="user-pass" placeholder="Password (1234)" style="width:100%; padding:12px; margin-bottom:20px; border-radius:10px; border:none; background:#222; color:white; text-align:center;">
-            <button onclick="System.login()" style="width:100%; padding:12px; border-radius:10px; border:none; background:var(--accent); color:black; font-weight:bold; cursor:pointer;">START SESSION</button>
+        <div style="text-align: center; background: var(--glass); padding: 50px; border-radius: 30px; border: 1px solid var(--border);">
+            <h1 style="color: var(--accent);">HATIM OS AI</h1>
+            <button onclick="System.login()" style="background:var(--accent); border:none; padding:15px 40px; border-radius:10px; font-weight:bold; cursor:pointer;">دخول النظام</button>
         </div>
     </div>
 
     <div id="desktop">
         <div class="app-grid" id="main-grid"></div>
         <div id="window-manager"></div>
-
         <div id="taskbar">
-            <i class="fas fa-th-large dock-tool" title="Start" onclick="System.openApp('store')"></i>
-            <div id="dock-apps" style="display:flex; gap:15px;"></div>
-            <div style="width:1px; height:25px; background:var(--border)"></div>
-            <div id="clock" style="font-weight:bold; font-family:monospace;">00:00</div>
-            <i class="fas fa-globe dock-tool" onclick="System.toggleLang()"></i>
+            <div id="clock" style="font-weight:bold; color:var(--accent);">00:00</div>
         </div>
     </div>
 
     <script>
+        const API_KEY = "AIzaSyCD36NJHFTWiwSCcIgzQWrgrEcZDJqQMdM"; // مفتاحك السحري
+
         const System = {
-            lang: 'ar', z: 100,
+            z: 100,
             apps: {
-                'browser': { name: {ar:'المتصفح', en:'Browser'}, icon:'fa-globe', bg:'#4285f4', url:'https://www.bing.com' },
-                'camera': { name: {ar:'الكاميرا', en:'Camera'}, icon:'fa-camera', bg:'#ff0055', special:'cam' },
-                'maps': { name: {ar:'الخرائط', en:'Maps'}, icon:'fa-map-marked-alt', bg:'#34a853', url:'https://www.google.com/maps/embed' },
-                'youtube': { name: {ar:'يوتيوب', en:'YouTube'}, icon:'fa-play', bg:'#ff0000', url:'https://www.youtube.com/embed' },
-                'paint': { name: {ar:'الرسام', en:'Paint'}, icon:'fa-paint-brush', bg:'#e91e63', url:'https://jspaint.app' },
-                'calc': { name: {ar:'الحاسبة', en:'Calculator'}, icon:'fa-calculator', bg:'#ff9800', url:'https://www.google.com/search?q=calculator&igu=1' },
-                'store': { name: {ar:'المتجر', en:'Store'}, icon:'fa-shopping-cart', bg:'#00f2ff', special:'store' },
-                'chat': { name: {ar:'الدردشة', en:'Global Chat'}, icon:'fa-comments', bg:'#9c27b0', content:'<h1>قريباً...</h1>' },
-                'code': { name: {ar:'المحرر', en:'Code Editor'}, icon:'fa-code', bg:'#212121', url:'https://codesandbox.io/embed' },
-                'weather': { name: {ar:'الطقس', en:'Weather'}, icon:'fa-cloud-sun', bg:'#03a9f4', url:'https://web.meteo.gov.ma/' },
-                'files': { name: {ar:'ملفاتي', en:'My Files'}, icon:'fa-folder-open', bg:'#ffca28', content:'📂 Desktop<br>📂 Documents' },
-                'settings': { name: {ar:'الإعدادات', en:'Settings'}, icon:'fa-cog', bg:'#607d8b', special:'settings' }
+                'ai': { name: 'Hatim AI', icon: 'fa-robot', bg: 'linear-gradient(45deg, #00f2ff, #7000ff)', special: 'ai' },
+                'code': { name: 'المحرر', icon: 'fa-code', bg: '#212121', url: 'https://codesandbox.io/embed' },
+                'paint': { name: 'الرسام', icon: 'fa-palette', bg: '#e91e63', url: 'https://jspaint.app' }
             },
 
-            boot() {
+            init() {
                 this.updateClock();
                 setInterval(() => this.updateClock(), 1000);
                 this.renderIcons();
+            },
+
+            login() { 
+                document.getElementById('login-screen').style.display = 'none'; 
+                document.getElementById('desktop').style.display = 'block'; 
             },
 
             updateClock() {
                 document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
             },
 
-            login() {
-                const p = document.getElementById('user-pass').value;
-                if(p === '1234' || p === '') {
-                    document.getElementById('login-screen').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('login-screen').style.display = 'none';
-                        document.getElementById('desktop').style.display = 'block';
-                    }, 500);
-                } else { alert("Pass: 1234"); }
-            },
-
             renderIcons() {
                 const grid = document.getElementById('main-grid');
-                grid.innerHTML = "";
                 Object.keys(this.apps).forEach(key => {
                     const app = this.apps[key];
-                    grid.innerHTML += `
-                        <div class="app-card" onclick="System.openApp('${key}')">
-                            <div class="app-icon" style="background:${app.bg}"><i class="fas ${app.icon}"></i></div>
-                            <span>${app.name[this.lang]}</span>
-                        </div>`;
+                    grid.innerHTML += `<div class="app-card" onclick="System.openApp('${key}')">
+                        <div class="app-icon" style="background:${app.bg}"><i class="fas ${app.icon}"></i></div>
+                        <span>${app.name}</span>
+                    </div>`;
                 });
             },
 
@@ -133,29 +91,64 @@
                 const app = this.apps[key];
                 const win = document.createElement('div');
                 win.className = "window"; win.id = 'win-'+key;
-                win.style.zIndex = ++this.z; win.style.top = "50px"; win.style.left = "100px";
-                
+                win.style.top = "10%"; win.style.left = "20%"; win.style.zIndex = ++this.z;
+
                 win.innerHTML = `
                     <div class="win-header" onmousedown="System.drag(event, this)">
-                        <span><i class="fas ${app.icon}"></i> ${app.name[this.lang]}</span>
-                        <i class="fas fa-times" onclick="System.closeApp('${key}')" style="cursor:pointer; color:#ff5f56;"></i>
+                        <span><i class="fas ${app.icon}"></i> ${app.name}</span>
+                        <span onclick="System.closeApp('${key}')" style="cursor:pointer; color:#ff5f56; font-weight:bold;">X</span>
                     </div>
-                    <div class="win-body">
-                        ${app.url ? `<iframe src="${app.url}"></iframe>` : `<div style="padding:20px;">${app.content || 'System App'}</div>`}
+                    <div style="flex:1; overflow:hidden;">
+                        ${app.special === 'ai' ? this.getAIChatHTML() : `<iframe src="${app.url}" style="width:100%; height:100%; border:none;"></iframe>`}
                     </div>`;
                 document.getElementById('window-manager').appendChild(win);
             },
 
             closeApp(key) { document.getElementById('win-'+key).remove(); },
 
-            toggleLang() {
-                this.lang = this.lang === 'ar' ? 'en' : 'ar';
-                document.getElementById('os-root').dir = this.lang === 'ar' ? 'rtl' : 'ltr';
-                this.renderIcons();
+            getAIChatHTML() {
+                return `
+                    <div id="chat-container">
+                        <div id="chat-messages"></div>
+                        <div id="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="اسأل ذكاء حاتم الاصطناعي..." onkeypress="if(event.key==='Enter') System.askAI()">
+                            <button onclick="System.askAI()" style="background:var(--accent); border:none; padding:10px 20px; border-radius:10px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>`;
+            },
+
+            async askAI() {
+                const input = document.getElementById('chat-input');
+                const box = document.getElementById('chat-messages');
+                if(!input.value) return;
+
+                const userText = input.value;
+                box.innerHTML += `<div class="msg user-msg">${userText}</div>`;
+                input.value = "";
+                box.scrollTop = box.scrollHeight;
+
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.className = "msg ai-msg";
+                aiMsgDiv.innerText = "... يفكر";
+                box.appendChild(aiMsgDiv);
+
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: userText }] }] })
+                    });
+                    const data = await response.json();
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    aiMsgDiv.innerText = aiText;
+                } catch (e) {
+                    aiMsgDiv.innerText = "خطأ: تأكد من مفتاح الـ API أو اتصالك.";
+                }
+                box.scrollTop = box.scrollHeight;
             },
 
             drag(e, header) {
-                const win = header.parentElement; win.style.zIndex = ++this.zIndex;
+                const win = header.parentElement;
                 let ox = e.clientX - win.offsetLeft, oy = e.clientY - win.offsetTop;
                 document.onmousemove = (ev) => { win.style.left = ev.clientX - ox + "px"; win.style.top = ev.clientY - oy + "px"; };
                 document.onmouseup = () => document.onmousemove = null;
